@@ -1,0 +1,5 @@
+﻿  SandboxApp.cpp
+D:\mycode\projects\Capybara\Capybara\src\Capybara\Application.h(2,1): warning C4005: “CPBR_PLATFORM_WINDOWS”: 宏重定义
+D:\mycode\projects\Capybara\Capybara\src\Capybara\Application.h(2,1): message : 之前在命令行上声明的“CPBR_PLATFORM_WINDOWS”
+    正在创建库 D:\mycode\projects\Capybara\bin\Debug-x64\Sandbox\Sandbox.lib 和对象 D:\mycode\projects\Capybara\bin\Debug-x64\Sandbox\Sandbox.exp
+  Sandbox.vcxproj -> D:\mycode\projects\Capybara\bin\Debug-x64\Sandbox\Sandbox.exe
