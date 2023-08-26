@@ -85,6 +85,7 @@
     <ClInclude Include="src\Capybara.h" />
     <ClInclude Include="src\Capybara\Application.h" />
     <ClInclude Include="src\Capybara\Core.h" />
+    <ClInclude Include="src\Capybara\EntryPoint.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Capybara\Application.cpp">

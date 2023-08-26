@@ -9,6 +9,9 @@ namespace Capybara
 	public:
 		Application();
 		virtual ~Application();
+		
 		void Run();
 	};
+
+	Application* CreateApplication();
 }
