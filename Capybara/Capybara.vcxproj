@@ -150,11 +150,17 @@
     <ClInclude Include="src\Capybara\Application.h" />
     <ClInclude Include="src\Capybara\Core.h" />
     <ClInclude Include="src\Capybara\EntryPoint.h" />
+    <ClInclude Include="src\Capybara\Events\ApplicationEvent.h" />
+    <ClInclude Include="src\Capybara\Events\Event.h" />
+    <ClInclude Include="src\Capybara\Events\KeyEvent.h" />
     <ClInclude Include="src\Capybara\Log.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Capybara\Application.cpp" />
     <ClCompile Include="src\Capybara\Log.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Capybara\Events\MouseEvent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -24,6 +24,7 @@ project "Capybara"
 	}
 	includedirs
 	{
+		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include"
 	}
 	filter "system:windows"
