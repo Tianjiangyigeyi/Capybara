@@ -58,6 +58,7 @@
       <PreprocessorDefinitions>CPBR_BUILD_DLL;CPBR_PLATFORM_WINDOWS;PLATFORM_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)Capybara\vendor\spdlog\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -73,6 +74,7 @@
       <PreprocessorDefinitions>CPBR_PLATFORM_WINDOWS;CPBR_BUILD_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)Capybara\vendor\spdlog\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -86,6 +88,7 @@
     <ClInclude Include="src\Capybara\Application.h" />
     <ClInclude Include="src\Capybara\Core.h" />
     <ClInclude Include="src\Capybara\EntryPoint.h" />
+    <ClInclude Include="src\Capybara\Log.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Capybara\Application.cpp">
@@ -161,6 +164,7 @@
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="src\Capybara\Log.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

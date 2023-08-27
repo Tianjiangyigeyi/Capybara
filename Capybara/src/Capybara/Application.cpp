@@ -14,7 +14,6 @@ namespace Capybara
 	{
 		while (true)
 		{
-			std::cout << "Application" << std::endl;
 		}
 	}
 }

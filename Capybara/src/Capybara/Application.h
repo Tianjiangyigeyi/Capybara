@@ -1,10 +1,14 @@
 ﻿#pragma once
-//#define CPBR_PLATFORM_WINDOWS
-//#define CPBR_BUILD_DLL
+#ifndef CPBR_PLATFORM_WINDOWS
+#define CPBR_PLATFORM_WINDOWS
+#endif
+#ifndef CPBR_BUILD_DLL
+#define CPBR_BUILD_DLL
+#endif
 #include "Core.h"
 namespace Capybara
 {
-	class __declspec(dllexport) Application
+	class CAPYBARA_API Application
 	{
 	public:
 		Application();

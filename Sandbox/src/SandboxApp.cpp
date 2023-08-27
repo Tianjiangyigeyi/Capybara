@@ -1,4 +1,9 @@
-﻿#include <Capybara.h>
+﻿
+#include <Capybara.h>
+#ifdef CPBR_BUILD_DLL
+#undef CPBR_BUILD_DLL
+#endif
+
 class SandBox : public Capybara::Application
 {
 public:

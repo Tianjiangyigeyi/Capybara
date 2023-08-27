@@ -1,0 +1,3 @@
+[submodule "Capybara/vendor/spdlog"]
+	path = Capybara/vendor/spdlog
+	url = https://github.com/gabime/spdlog
