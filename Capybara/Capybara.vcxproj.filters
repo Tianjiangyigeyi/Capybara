@@ -4,6 +4,9 @@
     <Filter Include="Capybara">
       <UniqueIdentifier>{48CAC589-3497-2095-5DB0-0E3D49DC5523}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Capybara\Events">
+      <UniqueIdentifier>{2C15186A-98A0-852E-A1B1-08230DBCE12E}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Capybara.h" />
@@ -15,6 +18,18 @@
     </ClInclude>
     <ClInclude Include="src\Capybara\EntryPoint.h">
       <Filter>Capybara</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Capybara\Events\ApplicationEvent.h">
+      <Filter>Capybara\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Capybara\Events\Event.h">
+      <Filter>Capybara\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Capybara\Events\KeyEvent.h">
+      <Filter>Capybara\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Capybara\Events\MouseEvent.h">
+      <Filter>Capybara\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Capybara\Log.h">
       <Filter>Capybara</Filter>

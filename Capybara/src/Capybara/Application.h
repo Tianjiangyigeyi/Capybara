@@ -6,6 +6,7 @@
 #define CPBR_BUILD_DLL
 #endif
 #include "Core.h"
+#include "Events/Event.h"
 namespace Capybara
 {
 	class CAPYBARA_API Application
@@ -16,6 +17,6 @@ namespace Capybara
 		
 		void Run();
 	};
-
+	// To be defined in CLIENT
 	Application* CreateApplication();
 }

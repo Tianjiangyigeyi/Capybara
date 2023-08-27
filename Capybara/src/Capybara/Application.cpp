@@ -1,7 +1,10 @@
 ﻿#include "Application.h"
-#include <iostream>
+
+#include "Capybara/Events/ApplicationEvent.h"
+#include "Capybara/Log.h"
 namespace Capybara
 {
+	
 	Application::Application()
 	{
 	}
@@ -12,6 +15,15 @@ namespace Capybara
 
 	void Application::Run()
 	{
+		WindowResizeEvent e(1200, 700);
+		if (e.IsInCategory(EventCategoryApplication))
+		{
+			CPBR_TRACE(e);
+		}
+		if (e.IsInCategory(EventCategoryInput))
+		{
+			CPBR_TRACE(e);
+		} 
 		while (true)
 		{
 		}
