@@ -1,4 +1,5 @@
-﻿#include "Application.h"
+﻿#include "precomp.h"
+#include "Application.h"
 
 #include "Capybara/Events/ApplicationEvent.h"
 #include "Capybara/Log.h"

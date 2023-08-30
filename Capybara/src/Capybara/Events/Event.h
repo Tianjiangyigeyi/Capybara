@@ -4,8 +4,6 @@
 #pragma once
 #include "Capybara/Core.h"
 
-#include <string>
-#include <functional>
 
 namespace Capybara
 {
