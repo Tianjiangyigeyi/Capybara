@@ -12,4 +12,12 @@
 #error Capybara only supports windows
 #endif
 
+#ifdef CPBR_ENABLE_ASSERTS
+#define CPBR_ASSERT(x, ...) { if (!(x)) {CPBR_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+#define CPBR_CORE_ASSERT(x, ...) { if (!(x)) {CPBR_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+#else
+#define CPBR_ASSERT(x, ...)
+#define CPBR_CORE_ASSERT(x, ...) 
+#endif
+
 #define BIT(x) 1 << x

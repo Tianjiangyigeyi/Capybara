@@ -3,30 +3,26 @@
 
 #include "Capybara/Events/ApplicationEvent.h"
 #include "Capybara/Log.h"
+#include <GLFW/glfw3.h>
 namespace Capybara
 {
 	
 	Application::Application()
 	{
+		m_Window = std::unique_ptr<Window>(Window::Create());
 	}
 
 	Application::~Application()
 	{
 	}
 
-	void Application::Run()
+	void Application::Run() 
 	{
-		WindowResizeEvent e(1200, 700);
-		if (e.IsInCategory(EventCategoryApplication))
+		while (m_Running)
 		{
-			CPBR_TRACE(e);
-		}
-		if (e.IsInCategory(EventCategoryInput))
-		{
-			CPBR_TRACE(e);
-		} 
-		while (true)
-		{
+			glClearColor(1, 0, 1, 1);
+			glClear(GL_COLOR_BUFFER_BIT);
+			m_Window->OnUpdate();
 		}
 	}
 }

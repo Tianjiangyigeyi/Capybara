@@ -7,6 +7,12 @@
     <Filter Include="Capybara\Events">
       <UniqueIdentifier>{2C15186A-98A0-852E-A1B1-08230DBCE12E}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\Windows">
+      <UniqueIdentifier>{64FBD71A-50F4-F66C-7926-DCF1657ED678}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Capybara.h" />
@@ -34,6 +40,12 @@
     <ClInclude Include="src\Capybara\Log.h">
       <Filter>Capybara</Filter>
     </ClInclude>
+    <ClInclude Include="src\Capybara\Window.h">
+      <Filter>Capybara</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
+      <Filter>Platform\Windows</Filter>
+    </ClInclude>
     <ClInclude Include="src\precomp.h" />
   </ItemGroup>
   <ItemGroup>
@@ -42,6 +54,9 @@
     </ClCompile>
     <ClCompile Include="src\Capybara\Log.cpp">
       <Filter>Capybara</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
+      <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\precomp.cpp" />
   </ItemGroup>

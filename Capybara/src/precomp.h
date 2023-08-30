@@ -11,7 +11,7 @@
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
-
+#include "Capybara/Log.h"
 #ifdef CPBR_PLATFORM_WINDOWS
     #include <Windows.h>
 #endif
