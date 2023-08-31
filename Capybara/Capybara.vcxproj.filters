@@ -7,6 +7,9 @@
     <Filter Include="Capybara\Events">
       <UniqueIdentifier>{2C15186A-98A0-852E-A1B1-08230DBCE12E}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Capybara\ImGui">
+      <UniqueIdentifier>{72D5DE96-5EA3-D29C-4737-43C333A4AE01}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Platform">
       <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
     </Filter>
@@ -37,6 +40,9 @@
     <ClInclude Include="src\Capybara\Events\MouseEvent.h">
       <Filter>Capybara\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\Capybara\ImGui\ImGuiLayer.h">
+      <Filter>Capybara\ImGui</Filter>
+    </ClInclude>
     <ClInclude Include="src\Capybara\Layer.h">
       <Filter>Capybara</Filter>
     </ClInclude>
@@ -57,6 +63,9 @@
   <ItemGroup>
     <ClCompile Include="src\Capybara\Application.cpp">
       <Filter>Capybara</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Capybara\ImGui\ImGuiLayer.cpp">
+      <Filter>Capybara\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\Capybara\Layer.cpp">
       <Filter>Capybara</Filter>

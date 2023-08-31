@@ -13,9 +13,11 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}" -- Debug-Windows
 IncludeDir = {}
 IncludeDir["GLFW"] = "Capybara/vendor/GLFW/include"
 IncludeDir["Glad"] = "Capybara/vendor/Glad/include"
+IncludeDir["ImGui"] = "Capybara/vendor/imgui"
 
 include "Capybara/vendor/GLFW"
 include "Capybara/vendor/Glad"
+include "Capybara/vendor/imgui"
 
 
 project "Capybara"
@@ -41,13 +43,15 @@ project "Capybara"
     {"%{prj.name}/src", 
      "%{prj.name}/vendor/spdlog/include", 
      "%{IncludeDir.GLFW}",
-     "%{IncludeDir.Glad}"
+     "%{IncludeDir.Glad}",
+     "%{IncludeDir.ImGui}"
     }
 
     links 
     {
         "GLFW", 
         "Glad",
+        "ImGui",
         "opengl32.lib"
     }
 
