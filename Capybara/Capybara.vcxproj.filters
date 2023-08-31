@@ -37,6 +37,12 @@
     <ClInclude Include="src\Capybara\Events\MouseEvent.h">
       <Filter>Capybara\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\Capybara\Layer.h">
+      <Filter>Capybara</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Capybara\LayerStack.h">
+      <Filter>Capybara</Filter>
+    </ClInclude>
     <ClInclude Include="src\Capybara\Log.h">
       <Filter>Capybara</Filter>
     </ClInclude>
@@ -50,6 +56,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Capybara\Application.cpp">
+      <Filter>Capybara</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Capybara\Layer.cpp">
+      <Filter>Capybara</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Capybara\LayerStack.cpp">
       <Filter>Capybara</Filter>
     </ClCompile>
     <ClCompile Include="src\Capybara\Log.cpp">

@@ -36,14 +36,17 @@ postbuildcommands {("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. 
 
 filter "configurations:Debug" -- only apply to Debug configurations
 defines "CPBR_DEGUG"
+buildoptions "/MDd"
 symbols "On"
 
 filter "configurations:Release" -- only apply to Debug configurations
 defines "CPBR_RELEASE"
+buildoptions "/MD"
 optimize "On"
 
 filter "configurations:Dist" -- only apply to Debug configurations
 defines "CPBR_DIST"
+buildoptions "/MD"
 optimize "On"
 
 project "Sandbox"
@@ -55,6 +58,7 @@ targetdir("bin/" .. outputdir .. "/%{prj.name}")
 objdir("bin-int/" .. outputdir .. "/%{prj.name}")
 pchheader "precomp.h"
 pchsource "Sandbox/src/precomp.cpp"
+
 files {"%{prj.name}/src/**.h", "%{prj.name}/src/**.cpp"}
 includedirs {"Capybara/vendor/spdlog/include", "Capybara/src"}
 
@@ -69,12 +73,15 @@ defines {"CPBR_PLATFORM_WINDOWS"}
 
 filter "configurations:Debug" -- only apply to Debug configurations
 defines "CPBR_DEGUG"
+buildoptions "/MDd"
 symbols "On"
 
 filter "configurations:Release" -- only apply to Debug configurations
 defines "CPBR_RELEASE"
+buildoptions "/MD"
 optimize "On"
 
 filter "configurations:Dist" -- only apply to Debug configurations
 defines "CPBR_DIST"
+buildoptions "/MD"
 optimize "On"
