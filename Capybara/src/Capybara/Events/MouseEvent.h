@@ -48,7 +48,7 @@ namespace Capybara
     class CAPYBARA_API MouseButtonEvent : public Event
     {
     public:
-        inline int GetMouseButton() const { return m_button; }
+        inline int GetMouseButton() const { return m_Button; }
 
         EVENT_CLASS_CATEGORY(EventCategoryInput | EventCategoryMouseButton)
     protected:
