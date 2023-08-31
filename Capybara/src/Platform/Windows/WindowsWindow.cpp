@@ -5,6 +5,8 @@
 #include "Capybara/Events/MouseEvent.h"
 #include "Capybara/Events/KeyEvent.h"
 
+#include <glad/glad.h>
+
 namespace Capybara
 {
     static bool s_GLFWInitialized = false;
@@ -45,7 +47,11 @@ namespace Capybara
         }
 
         m_Window = glfwCreateWindow(static_cast<int>(m_Data.Width), static_cast<int>(m_Data.Height), m_Data.Title.c_str(), nullptr, nullptr);
+
         glfwMakeContextCurrent(m_Window);
+        int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+        CPBR_CORE_ASSERT(status, "Failed to Initialize Glad!");
+        
         glfwSetWindowUserPointer(m_Window, &m_Data);
         SetVsync(true);
 
