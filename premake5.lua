@@ -92,8 +92,8 @@ project "Sandbox"
     targetdir("bin/" .. outputdir .. "/%{prj.name}")
     objdir("bin-int/" .. outputdir .. "/%{prj.name}")
 
-    pchheader "precomp.h"
-    pchsource "Sandbox/src/precomp.cpp"
+    --pchheader "precomp.h"
+    --pchsource "Sandbox/src/precomp.cpp"
     
     files 
     {
