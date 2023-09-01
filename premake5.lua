@@ -1,6 +1,6 @@
 workspace "Capybara"
     architecture "x64"
-
+    startproject "Sandbox"
     configurations 
     {
         "Debug", 
@@ -19,14 +19,14 @@ include "Capybara/vendor/GLFW"
 include "Capybara/vendor/Glad"
 include "Capybara/vendor/imgui"
 
-startproject "Sandbox"
+
 
 project "Capybara"
     location "Capybara"
     kind "SharedLib" -- dll
     language "C++"
     cppdialect "C++17"
-    staticruntime "On"
+    staticruntime "off"
 
     targetdir("bin/" .. outputdir .. "/%{prj.name}")
     objdir("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -58,7 +58,6 @@ project "Capybara"
 
     filter "system:windows"
     cppdialect "C++17"
-    staticruntime "On" -- linking the runtime library
     systemversion "latest"
 
     defines 
@@ -76,23 +75,24 @@ project "Capybara"
 
     filter "configurations:Debug" -- only apply to Debug configurations
     defines "CPBR_DEGUG"
-    buildoptions "/MDd"
+    runtime "Debug"
     symbols "On"
     
     filter "configurations:Release" -- only apply to Debug configurations
     defines "CPBR_RELEASE"
-    buildoptions "/MD"
+    runtime "Release"
     optimize "On"
 
     filter "configurations:Dist" -- only apply to Debug configurations
     defines "CPBR_DIST"
-    buildoptions "/MD"
+    runtime "Release"
     optimize "On"
 
 project "Sandbox"
     location "Sandbox"
     kind "ConsoleApp" -- .exe
     language "C++"
+    staticruntime "off" -- linking the runtime library
     
     targetdir("bin/" .. outputdir .. "/%{prj.name}")
     objdir("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -119,22 +119,21 @@ project "Sandbox"
     
     filter "system:windows"
     cppdialect "C++17"
-    staticruntime "On" -- linking the runtime library
     systemversion "latest"
     
     defines {"CPBR_PLATFORM_WINDOWS"}
     
     filter "configurations:Debug" -- only apply to Debug configurations
     defines "CPBR_DEGUG"
-    buildoptions "/MDd"
+    runtime "Debug"
     symbols "On"
     
     filter "configurations:Release" -- only apply to Debug configurations
     defines "CPBR_RELEASE"
-    buildoptions "/MD"
+    runtime "Release"
     optimize "On"
     
     filter "configurations:Dist" -- only apply to Debug configurations
     defines "CPBR_DIST"
-    buildoptions "/MD"
+    runtime "Release"
     optimize "On"
