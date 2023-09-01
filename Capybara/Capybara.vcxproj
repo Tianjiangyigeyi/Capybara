@@ -161,11 +161,13 @@
     <ClInclude Include="src\Capybara\Events\KeyEvent.h" />
     <ClInclude Include="src\Capybara\Events\MouseEvent.h" />
     <ClInclude Include="src\Capybara\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\Capybara\Input.h" />
     <ClInclude Include="src\Capybara\Layer.h" />
     <ClInclude Include="src\Capybara\LayerStack.h" />
     <ClInclude Include="src\Capybara\Log.h" />
     <ClInclude Include="src\Capybara\Window.h" />
     <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\precomp.h" />
   </ItemGroup>
@@ -176,6 +178,7 @@
     <ClCompile Include="src\Capybara\LayerStack.cpp" />
     <ClCompile Include="src\Capybara\Log.cpp" />
     <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\precomp.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

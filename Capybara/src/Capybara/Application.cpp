@@ -2,6 +2,9 @@
 #include "Application.h"
 
 #include <glad/glad.h>
+
+#include "Input.h"
+
 namespace Capybara
 {
 #define BIND_EVENT_FN(x) [this](auto&&... args) -> decltype(auto) { return this->x(std::forward<decltype(args)>(args)...); }
@@ -60,6 +63,10 @@ namespace Capybara
 			{
 				layer->OnUpdate();
 			}
+
+			auto [x, y] = Input::GetMousePosition();
+			CPBR_CORE_TRACE("{0}, {1}", x, y);
+			
 			m_Window->OnUpdate();
 		}
 	}
