@@ -23,7 +23,7 @@ public:
 	SandBox()
 	{
 		PushLayer(new ExampleLayer());
-		PushOverlay(new Capybara::ImGuiLayer);
+		PushOverlay(new Capybara::ImGuiLayer());
 	}
 	~SandBox()
 	{
