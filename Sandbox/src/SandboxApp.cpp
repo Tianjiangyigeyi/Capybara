@@ -8,12 +8,15 @@ public:
 	ExampleLayer() : Layer("Example") {}
 	void OnUpdate() override
 	{
-		CPBR_INFO("ExampleLayer::OnUpdate");
+		if (Capybara::Input::IsKeyPressed(CPBR_KEY_TAB))
+		{
+			CPBR_TRACE("Tab key is pressed!");
+		}
 	}
 
 	void OnEvent(Capybara::Event& event) override
 	{
-		CPBR_TRACE("{0}", event);
+		// CPBR_TRACE("{0}", event);
 	}
 };
 

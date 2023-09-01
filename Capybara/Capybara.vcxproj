@@ -162,9 +162,11 @@
     <ClInclude Include="src\Capybara\Events\MouseEvent.h" />
     <ClInclude Include="src\Capybara\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Capybara\Input.h" />
+    <ClInclude Include="src\Capybara\KeyCodes.h" />
     <ClInclude Include="src\Capybara\Layer.h" />
     <ClInclude Include="src\Capybara\LayerStack.h" />
     <ClInclude Include="src\Capybara\Log.h" />
+    <ClInclude Include="src\Capybara\MouseButtonCodes.h" />
     <ClInclude Include="src\Capybara\Window.h" />
     <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />

@@ -1,0 +1,15 @@
+﻿#pragma once
+
+// From glfw3.h
+#define CPBR_MOUSE_BUTTON_1         0
+#define CPBR_MOUSE_BUTTON_2         1
+#define CPBR_MOUSE_BUTTON_3         2
+#define CPBR_MOUSE_BUTTON_4         3
+#define CPBR_MOUSE_BUTTON_5         4
+#define CPBR_MOUSE_BUTTON_6         5
+#define CPBR_MOUSE_BUTTON_7         6
+#define CPBR_MOUSE_BUTTON_8         7
+#define CPBR_MOUSE_BUTTON_LAST      CPBR_MOUSE_BUTTON_8
+#define CPBR_MOUSE_BUTTON_LEFT      CPBR_MOUSE_BUTTON_1
+#define CPBR_MOUSE_BUTTON_RIGHT     CPBR_MOUSE_BUTTON_2
+#define CPBR_MOUSE_BUTTON_MIDDLE    CPBR_MOUSE_BUTTON_3
