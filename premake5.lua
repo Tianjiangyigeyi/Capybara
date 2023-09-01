@@ -19,6 +19,7 @@ include "Capybara/vendor/GLFW"
 include "Capybara/vendor/Glad"
 include "Capybara/vendor/imgui"
 
+startproject "Sandbox"
 
 project "Capybara"
     location "Capybara"
