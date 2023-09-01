@@ -14,6 +14,7 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "Capybara/vendor/GLFW/include"
 IncludeDir["Glad"] = "Capybara/vendor/Glad/include"
 IncludeDir["ImGui"] = "Capybara/vendor/imgui"
+IncludeDir["glm"] = "Capybara/vendor/glm"
 
 include "Capybara/vendor/GLFW"
 include "Capybara/vendor/Glad"
@@ -37,7 +38,10 @@ project "Capybara"
     files 
     {
         "%{prj.name}/src/**.h", 
-        "%{prj.name}/src/**.cpp"
+        "%{prj.name}/src/**.cpp",
+        "%{prj.name}/vendor/glm/glm/**.hpp",
+        "%{prj.name}/vendor/glm/glm/**.inl"
+        
     }
 
     includedirs 
@@ -45,7 +49,8 @@ project "Capybara"
      "%{prj.name}/vendor/spdlog/include", 
      "%{IncludeDir.GLFW}",
      "%{IncludeDir.Glad}",
-     "%{IncludeDir.ImGui}"
+     "%{IncludeDir.ImGui}",
+     "%{IncludeDir.glm}"
     }
 
     links 
@@ -109,7 +114,8 @@ project "Sandbox"
     includedirs 
     {
         "Capybara/vendor/spdlog/include", 
-        "Capybara/src"
+        "Capybara/src",
+        "%{IncludeDir.glm}"
     }
     
     links 
