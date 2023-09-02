@@ -1,6 +1,7 @@
 ﻿#include "precomp.h"
 #include <Capybara.h>
 
+#include "imgui.h"
 
 
 class ExampleLayer : public Capybara::Layer
@@ -27,7 +28,6 @@ public:
 	SandBox()
 	{
 		PushLayer(new ExampleLayer());
-		PushOverlay(new Capybara::ImGuiLayer());
 	}
 	~SandBox()
 	{

@@ -115,6 +115,7 @@ project "Sandbox"
     {
         "Capybara/vendor/spdlog/include", 
         "Capybara/src",
+        "%{IncludeDir.ImGui}",
         "%{IncludeDir.glm}"
     }
     
