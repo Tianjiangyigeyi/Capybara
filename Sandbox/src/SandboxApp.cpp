@@ -1,7 +1,7 @@
 ﻿#include "precomp.h"
 #include <Capybara.h>
 
-#include "imgui.h"
+// #include "imgui.h"
 
 
 class ExampleLayer : public Capybara::Layer
@@ -15,6 +15,12 @@ public:
 			CPBR_TRACE("Tab key is pressed!");
 		}
 	}
+	// virtual void OnImGuiRender() override
+	// {
+	// 	ImGui::Begin("test");
+	// 	ImGui::Text("hello");
+	// 	ImGui::End();
+	// }
 
 	void OnEvent(Capybara::Event& event) override
 	{

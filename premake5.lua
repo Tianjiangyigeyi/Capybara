@@ -24,10 +24,10 @@ include "Capybara/vendor/imgui"
 
 project "Capybara"
     location "Capybara"
-    kind "SharedLib" -- dll
+    kind "StaticLib" -- lib
     language "C++"
     cppdialect "C++17"
-    staticruntime "off"
+    staticruntime "on"
 
     targetdir("bin/" .. outputdir .. "/%{prj.name}")
     objdir("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -42,6 +42,11 @@ project "Capybara"
         "%{prj.name}/vendor/glm/glm/**.hpp",
         "%{prj.name}/vendor/glm/glm/**.inl"
         
+    }
+
+    defines
+    {
+        "_CRT_SECURE_NO_WARNINGS"
     }
 
     includedirs 
@@ -62,7 +67,6 @@ project "Capybara"
     }
 
     filter "system:windows"
-    cppdialect "C++17"
     systemversion "latest"
 
     defines 
@@ -72,32 +76,28 @@ project "Capybara"
         "GLFW_INCLUDE_NONE"
     }
 
-    -- create a postbuild step to put the .dll where we want to be
-    postbuildcommands 
-    {
-        ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
-    }
-
+   
     filter "configurations:Debug" -- only apply to Debug configurations
     defines "CPBR_DEGUG"
     runtime "Debug"
-    symbols "On"
+    symbols "on"
     
     filter "configurations:Release" -- only apply to Debug configurations
     defines "CPBR_RELEASE"
     runtime "Release"
-    optimize "On"
+    optimize "on"
 
     filter "configurations:Dist" -- only apply to Debug configurations
     defines "CPBR_DIST"
     runtime "Release"
-    optimize "On"
+    optimize "on"
 
 project "Sandbox"
     location "Sandbox"
     kind "ConsoleApp" -- .exe
     language "C++"
-    staticruntime "off" -- linking the runtime library
+    cppdialect "C++17"
+    staticruntime "on" 
     
     targetdir("bin/" .. outputdir .. "/%{prj.name}")
     objdir("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -115,6 +115,7 @@ project "Sandbox"
     {
         "Capybara/vendor/spdlog/include", 
         "Capybara/src",
+        "Capybara/vendor",
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.glm}"
     }
@@ -125,7 +126,6 @@ project "Sandbox"
     }
     
     filter "system:windows"
-    cppdialect "C++17"
     systemversion "latest"
     
     defines {"CPBR_PLATFORM_WINDOWS"}
@@ -133,14 +133,14 @@ project "Sandbox"
     filter "configurations:Debug" -- only apply to Debug configurations
     defines "CPBR_DEGUG"
     runtime "Debug"
-    symbols "On"
+    symbols "on"
     
     filter "configurations:Release" -- only apply to Debug configurations
     defines "CPBR_RELEASE"
     runtime "Release"
-    optimize "On"
+    optimize "on"
     
     filter "configurations:Dist" -- only apply to Debug configurations
     defines "CPBR_DIST"
     runtime "Release"
-    optimize "On"
+    optimize "on"
