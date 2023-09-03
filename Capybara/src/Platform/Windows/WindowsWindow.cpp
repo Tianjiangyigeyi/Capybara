@@ -5,7 +5,7 @@
 #include "Capybara/Events/MouseEvent.h"
 #include "Capybara/Events/KeyEvent.h"
 
-#include <glad/glad.h>
+#include "Platform/OpenGL/OpenGLContext.h"
 
 namespace Capybara
 {
@@ -37,6 +37,7 @@ namespace Capybara
         m_Data.Width = props.Width;
 
         CPBR_CORE_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width, props.Height);
+
         if (!s_GLFWInitialized)
         {
             // TODO: glfwTerminal on system shutdown
@@ -48,9 +49,8 @@ namespace Capybara
 
         m_Window = glfwCreateWindow(static_cast<int>(m_Data.Width), static_cast<int>(m_Data.Height), m_Data.Title.c_str(), nullptr, nullptr);
 
-        glfwMakeContextCurrent(m_Window);
-        int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-        CPBR_CORE_ASSERT(status, "Failed to Initialize Glad!");
+        m_Context = new OpenGLContext(m_Window);
+        m_Context->Init();
         
         glfwSetWindowUserPointer(m_Window, &m_Data);
         SetVsync(true);
@@ -146,7 +146,7 @@ namespace Capybara
     void WindowsWindow::OnUpdate()
     {
         glfwPollEvents();
-        glfwSwapBuffers(m_Window);
+        m_Context->SwapBuffers();
     }
 
     void WindowsWindow::SetVsync(bool enabled)

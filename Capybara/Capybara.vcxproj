@@ -158,7 +158,9 @@
     <ClInclude Include="src\Capybara\LayerStack.h" />
     <ClInclude Include="src\Capybara\Log.h" />
     <ClInclude Include="src\Capybara\MouseButtonCodes.h" />
+    <ClInclude Include="src\Capybara\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Capybara\Window.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\precomp.h" />
@@ -586,6 +588,7 @@
     <ClCompile Include="src\Capybara\Layer.cpp" />
     <ClCompile Include="src\Capybara\LayerStack.cpp" />
     <ClCompile Include="src\Capybara\Log.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\precomp.cpp">

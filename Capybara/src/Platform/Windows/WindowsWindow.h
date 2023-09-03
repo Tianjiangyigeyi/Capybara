@@ -3,6 +3,8 @@
 #include "Capybara/Window.h"
 #include <GLFW/glfw3.h>
 
+#include "Capybara/Renderer/GraphicsContext.h"
+
 namespace Capybara
 {
     class WindowsWindow :public Window
@@ -26,6 +28,8 @@ namespace Capybara
         virtual void Shutdown();
 
         GLFWwindow* m_Window;
+        GraphicsContext* m_Context;
+            
         struct WindowData
         {
             std::string Title;
