@@ -13,8 +13,14 @@
     <Filter Include="src\Capybara\ImGui">
       <UniqueIdentifier>{A9F5C2F4-95D9-834A-FE39-7E9DEA3C6ECC}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Capybara\Renderer">
+      <UniqueIdentifier>{C5677B9C-31D4-3697-FAC7-CEF466F358FF}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Platform">
       <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\OpenGL">
+      <UniqueIdentifier>{35A49437-A105-7245-2A73-B8F796D3A804}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Platform\Windows">
       <UniqueIdentifier>{5B054582-4794-CE4B-F0B2-E246DC20DFF1}</UniqueIdentifier>
@@ -87,8 +93,14 @@
     <ClInclude Include="src\Capybara\MouseButtonCodes.h">
       <Filter>src\Capybara</Filter>
     </ClInclude>
+    <ClInclude Include="src\Capybara\Renderer\GraphicsContext.h">
+      <Filter>src\Capybara\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Capybara\Window.h">
       <Filter>src\Capybara</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h">
+      <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Windows\WindowsInput.h">
       <Filter>src\Platform\Windows</Filter>
@@ -1366,6 +1378,9 @@
     </ClCompile>
     <ClCompile Include="src\Capybara\Log.cpp">
       <Filter>src\Capybara</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
       <Filter>src\Platform\Windows</Filter>
