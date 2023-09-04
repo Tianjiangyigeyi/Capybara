@@ -7,7 +7,7 @@ extern Capybara::Application* Capybara::CreateApplication();
 int main(int argc, char **argv)
 {
     Capybara::Log::Init();
-    CPBR_CORE_WARN("Initialized Log!");
+    CPBR_CORE_INFO("Initialized Log!");
 
     auto app = Capybara::CreateApplication();
     app->Run();

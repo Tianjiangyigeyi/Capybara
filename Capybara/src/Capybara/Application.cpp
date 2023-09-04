@@ -1,17 +1,16 @@
-﻿	#include "precomp.h"
-	#include "Application.h"
+﻿#include "precomp.h"
+#include "Application.h"
 
-	#include <glad/glad.h>
+#include <glad/glad.h>
+#include "Capybara/Renderer/Renderer.h"
+#include "Input.h"
+#include "Renderer/RenderCommand.h"
 
-	#include "Input.h"
-
-	namespace Capybara
-	{
+namespace Capybara
+{
 #define BIND_EVENT_FN(x) [this](auto&&... args) -> decltype(auto) { return this->x(std::forward<decltype(args)>(args)...); }
 
 	Application* Application::s_Instance = nullptr;
-
-	
 		
 	Application::Application()
 	{
@@ -119,8 +118,6 @@
 		
 	}
 
-		
-
 	Application::~Application()
 	{
 	}
@@ -137,7 +134,6 @@
 		overlay->OnAttach();
 
 	}
-
 
 	void Application::OnEvent(Event& event)
 	{
@@ -158,18 +154,18 @@
 	{
 		while (m_Running)
 		{
-			glClearColor(0.1f, 0.1f, 0.1f, 1);
-			glClear(GL_COLOR_BUFFER_BIT);
+			RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
+			RenderCommand::Clear();
+			
+			Renderer::BeginScene();
 
 			m_SquareShader->Bind();
-			m_SquareVA->Bind();
-			glDrawElements(GL_TRIANGLES, m_SquareVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
-
+			Renderer::Submit(m_SquareVA);
 			m_Shader->Bind();
-			m_VertexArray->Bind();
-			glDrawElements(GL_TRIANGLES, m_VertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			Renderer::Submit(m_VertexArray);
 
-
+			Renderer::EndScene();
+			
 			for (auto layer : m_LayerStack)
 			{
 				layer->OnUpdate();
@@ -190,4 +186,4 @@
 		m_Running = false;
 		return true;
 	}
-	}
+}
