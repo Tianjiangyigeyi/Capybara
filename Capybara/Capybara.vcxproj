@@ -160,8 +160,8 @@
     <ClInclude Include="src\Capybara\Log.h" />
     <ClInclude Include="src\Capybara\MouseButtonCodes.h" />
     <ClInclude Include="src\Capybara\Renderer\Buffer.h" />
-    <ClInclude Include="src\Capybara\Renderer\OrthographicCamera.h" />
     <ClInclude Include="src\Capybara\Renderer\GraphicsContext.h" />
+    <ClInclude Include="src\Capybara\Renderer\OrthographicCamera.h" />
     <ClInclude Include="src\Capybara\Renderer\RenderCommand.h" />
     <ClInclude Include="src\Capybara\Renderer\Renderer.h" />
     <ClInclude Include="src\Capybara\Renderer\RendererAPI.h" />

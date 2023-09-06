@@ -7,6 +7,9 @@
     <Filter Include="src\Capybara">
       <UniqueIdentifier>{3FCD3FBA-2B30-CF5E-D4B5-0715C0F79AE1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Capybara\Core">
+      <UniqueIdentifier>{F71096C1-6327-9457-AC9E-1F7918F464DF}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Capybara\Events">
       <UniqueIdentifier>{433C8084-AF9D-5D92-380B-A444A46B9451}</UniqueIdentifier>
     </Filter>
@@ -57,6 +60,9 @@
     <ClInclude Include="src\Capybara\Core.h">
       <Filter>src\Capybara</Filter>
     </ClInclude>
+    <ClInclude Include="src\Capybara\Core\Timestep.h">
+      <Filter>src\Capybara\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Capybara\EntryPoint.h">
       <Filter>src\Capybara</Filter>
     </ClInclude>
@@ -97,6 +103,9 @@
       <Filter>src\Capybara\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Capybara\Renderer\GraphicsContext.h">
+      <Filter>src\Capybara\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Capybara\Renderer\OrthographicCamera.h">
       <Filter>src\Capybara\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Capybara\Renderer\RenderCommand.h">
@@ -1407,6 +1416,9 @@
       <Filter>src\Capybara</Filter>
     </ClCompile>
     <ClCompile Include="src\Capybara\Renderer\Buffer.cpp">
+      <Filter>src\Capybara\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Capybara\Renderer\OrthographicCamera.cpp">
       <Filter>src\Capybara\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Capybara\Renderer\RenderCommand.cpp">
