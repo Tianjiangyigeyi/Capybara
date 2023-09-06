@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "Capybara/Events/Event.h"
 #include "Core.h"
+#include "Core/Timestep.h"
+
 namespace Capybara
 {
     class CAPYBARA_API Layer
@@ -11,7 +13,7 @@ namespace Capybara
 
         virtual void OnAttach() {}
         virtual void OnDetach() {}
-        virtual void OnUpdate() {}
+        virtual void OnUpdate(Timestep ts) {}
         virtual void OnImGuiRender() {}
         virtual void OnEvent(Event& event) {}
 

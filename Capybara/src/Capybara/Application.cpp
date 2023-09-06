@@ -4,6 +4,7 @@
 #include <glad/glad.h>
 #include "Capybara/Renderer/Renderer.h"
 #include "Input.h"
+#include "GLFW/glfw3.h"
 
 namespace Capybara
 {
@@ -60,9 +61,14 @@ namespace Capybara
 	{
 		while (m_Running)
 		{
+			// TODO: Platform::GetTime
+			float time = static_cast<float>(glfwGetTime());
+			Timestep timestep = time - m_LastFrameTime;
+			m_LastFrameTime = time;
+			
 			for (auto layer : m_LayerStack)
 			{
-				layer->OnUpdate();
+				layer->OnUpdate(timestep);
 			}
 
 			m_ImGuiLayer->Begin();

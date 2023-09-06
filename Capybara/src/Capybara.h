@@ -12,6 +12,8 @@
 
 #include "Capybara/ImGui/ImGuiLayer.h"
 
+#include "Capybara/Core/Timestep.h"
+
 // ---------- Renderer ----------
 #include "Capybara/Renderer/Renderer.h"
 #include "Capybara/Renderer/RenderCommand.h"
