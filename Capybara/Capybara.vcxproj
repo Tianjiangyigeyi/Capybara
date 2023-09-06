@@ -159,6 +159,7 @@
     <ClInclude Include="src\Capybara\Log.h" />
     <ClInclude Include="src\Capybara\MouseButtonCodes.h" />
     <ClInclude Include="src\Capybara\Renderer\Buffer.h" />
+    <ClInclude Include="src\Capybara\Renderer\OrthographicCamera.h" />
     <ClInclude Include="src\Capybara\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Capybara\Renderer\RenderCommand.h" />
     <ClInclude Include="src\Capybara\Renderer\Renderer.h" />
@@ -598,6 +599,7 @@
     <ClCompile Include="src\Capybara\LayerStack.cpp" />
     <ClCompile Include="src\Capybara\Log.cpp" />
     <ClCompile Include="src\Capybara\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Capybara\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\Capybara\Renderer\RenderCommand.cpp" />
     <ClCompile Include="src\Capybara\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Capybara\Renderer\RendererAPI.cpp" />

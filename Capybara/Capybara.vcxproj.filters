@@ -93,13 +93,40 @@
     <ClInclude Include="src\Capybara\MouseButtonCodes.h">
       <Filter>src\Capybara</Filter>
     </ClInclude>
+    <ClInclude Include="src\Capybara\Renderer\Buffer.h">
+      <Filter>src\Capybara\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Capybara\Renderer\GraphicsContext.h">
+      <Filter>src\Capybara\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Capybara\Renderer\RenderCommand.h">
+      <Filter>src\Capybara\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Capybara\Renderer\Renderer.h">
+      <Filter>src\Capybara\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Capybara\Renderer\RendererAPI.h">
+      <Filter>src\Capybara\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Capybara\Renderer\Shader.h">
+      <Filter>src\Capybara\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Capybara\Renderer\VertexArray.h">
       <Filter>src\Capybara\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Capybara\Window.h">
       <Filter>src\Capybara</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Windows\WindowsInput.h">
@@ -1379,7 +1406,34 @@
     <ClCompile Include="src\Capybara\Log.cpp">
       <Filter>src\Capybara</Filter>
     </ClCompile>
+    <ClCompile Include="src\Capybara\Renderer\Buffer.cpp">
+      <Filter>src\Capybara\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Capybara\Renderer\RenderCommand.cpp">
+      <Filter>src\Capybara\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Capybara\Renderer\Renderer.cpp">
+      <Filter>src\Capybara\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Capybara\Renderer\RendererAPI.cpp">
+      <Filter>src\Capybara\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Capybara\Renderer\Shader.cpp">
+      <Filter>src\Capybara\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Capybara\Renderer\VertexArray.cpp">
+      <Filter>src\Capybara\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
