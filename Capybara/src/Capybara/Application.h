@@ -10,14 +10,10 @@
 
 #include "ImGui/ImGuiLayer.h"
 
-#include "Capybara/Renderer/Shader.h"
-#include "Capybara/Renderer/Buffer.h"
-#include "Capybara/Renderer/VertexArray.h"
-#include "Capybara/Renderer/OrthographicCamera.h"
 
 namespace Capybara
 {
-	class CAPYBARA_API Application
+	class Application
 	{
 	public:
 		Application();
@@ -39,13 +35,7 @@ namespace Capybara
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 
-		std::shared_ptr<Shader> m_Shader;
-		std::shared_ptr<Shader> m_SquareShader;
-
-		std::shared_ptr<VertexArray> m_VertexArray;
-		std::shared_ptr<VertexArray> m_SquareVA;
 		
-		OrthographicCamera m_Camera;
 	private:
 		static Application* s_Instance;
 	};

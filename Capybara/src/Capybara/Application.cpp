@@ -4,7 +4,6 @@
 #include <glad/glad.h>
 #include "Capybara/Renderer/Renderer.h"
 #include "Input.h"
-#include "Renderer/RenderCommand.h"
 
 namespace Capybara
 {
@@ -13,7 +12,6 @@ namespace Capybara
 	Application* Application::s_Instance = nullptr;
 		
 	Application::Application()
-		: m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
 	{
 		CPBR_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
@@ -24,104 +22,6 @@ namespace Capybara
 
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
-
-		
-		float vertices[3 * 7] = {
-			-0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f,
-			 0.5f, -0.5f, 0.0f, 0.2f, 0.2f, 0.8f, 1.0f,
-			 0.0f,  0.5f, 0.0f, 0.8f, 0.8f, 0.2f, 1.0f
-		};
-		float vertices2[4 * 3] = {
-			-0.5f, -0.5f, 0.0f, 
-			 0.5f, -0.5f, 0.0f, 
-			 0.5f,  0.5f, 0.0f,
-			 -0.5f,  0.5f, 0.0f
-		};
-		unsigned int indices[3] = { 0, 1, 2 };
-		unsigned int indices2[6] = { 0, 1, 2, 2, 3, 0};
-
-		std::string vertexSrc = R"(
-			#version 330 core
-			layout(location = 0) in vec3 a_Position;
-			layout(location = 1) in vec4 a_Color;
-
-			uniform mat4 u_ViewProjection;			
-
-			out vec3 v_Position;
-			out vec4 v_Color;
-			void main()
-			{
-				v_Position = a_Position;
-				v_Color = a_Color;
-				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
-			}
-		)";
-		std::string fragmenSrc = R"(
-			#version 330 core
-			layout(location = 0) out vec4 color;
-
-			in vec3 v_Position; 
-			in vec4 v_Color;
-			void main()
-			{
-				//color = vec4(v_Position * 0.5 + 0.5, 1.0);
-				color = v_Color;
-			}
-		)";
-		std::string vertexSrc2 = R"(
-			#version 330 core
-			layout(location = 0) in vec3 a_Position;
-			uniform mat4 u_ViewProjection;			
-
-			out vec3 v_Position;
-			void main()
-			{
-				v_Position = a_Position;
-				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
-			}
-		)";
-		std::string fragmenSrc2 = R"(
-			#version 330 core
-			layout(location = 0) out vec4 color;
-
-			in vec3 v_Position; 
-
-			void main()
-			{
-				color = vec4(0.2, 0.3, 0.8, 1.0);
-			}
-		)";
-
-		std::shared_ptr<VertexBuffer> squareVB;
-		std::shared_ptr<IndexBuffer> squareIB;
-		std::shared_ptr<VertexBuffer> vertexBuffer;
-		std::shared_ptr<IndexBuffer> indexBuffer;
-		
-		m_VertexArray.reset(VertexArray::Create());
-		m_SquareVA.reset(VertexArray::Create());
-
-		indexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
-		vertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
-		squareVB.reset(VertexBuffer::Create(vertices2, sizeof(vertices2)));
-		squareIB.reset(IndexBuffer::Create(indices2, sizeof(indices2) / sizeof(uint32_t)));
-
-		m_Shader.reset(new Shader(vertexSrc, fragmenSrc));
-		m_SquareShader.reset(new Shader(vertexSrc2, fragmenSrc2));
-
-		
-		vertexBuffer->SetLayout({
-	        { ShaderDataType::Float3, "a_Position" },
-	        { ShaderDataType::Float4, "a_Color" }
-		});
-		m_VertexArray->AddVertexBuffer(vertexBuffer);
-		m_VertexArray->SetIndexBuffer(indexBuffer);
-		
-		squareVB->SetLayout({
-			{ ShaderDataType::Float3, "a_Position" }
-		});
-		m_SquareVA->AddVertexBuffer(squareVB);
-		m_SquareVA->SetIndexBuffer(squareIB);
-		
 	}
 
 	Application::~Application()
@@ -160,19 +60,6 @@ namespace Capybara
 	{
 		while (m_Running)
 		{
-			RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
-			RenderCommand::Clear();
-
-			m_Camera.SetPosition({0.5f, 0.5f, 0.0f});
-			m_Camera.SetRotation(45.0f);
-			
-			Renderer::BeginScene(m_Camera);
-
-			Renderer::Submit(m_SquareShader, m_SquareVA);
-			Renderer::Submit(m_Shader, m_VertexArray);
-
-			Renderer::EndScene();
-			
 			for (auto layer : m_LayerStack)
 			{
 				layer->OnUpdate();
