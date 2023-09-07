@@ -1,27 +1,55 @@
 ﻿#include "precomp.h"
 #include "Renderer.h"
-#include "RenderCommand.h"
 
-namespace Capybara
-{
-    Renderer::SceneData* Renderer::m_SceneData = new Renderer::SceneData;
-    // TODO: include camera, lights, environment
-    void Renderer::BeginScene(OrthographicCamera& camera)
+#include "Shader.h"
+
+namespace Capybara {
+
+    Renderer* Renderer::s_Instance = new Renderer();
+    RendererAPIType RendererAPI::s_CurrentRendererAPI = RendererAPIType::OpenGL;
+	
+    void Renderer::Init()
     {
-        m_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
+        s_Instance->m_ShaderLibrary = std::make_unique<ShaderLibrary>();
+        CPBR_RENDER({ RendererAPI::Init(); });
+
+        Renderer::GetShaderLibrary()->Load("assets/shaders/CapybaraPBR_Static.glsl");
+        Renderer::GetShaderLibrary()->Load("assets/shaders/CapybaraPBR_Anim.glsl");
     }
 
-    void Renderer::EndScene()
+    void Renderer::Clear()
+    {
+        CPBR_RENDER({
+            RendererAPI::Clear(0.0f, 0.0f, 0.0f, 1.0f);
+        });
+    }
+
+    void Renderer::Clear(float r, float g, float b, float a)
+    {
+        CPBR_RENDER_4(r, g, b, a, {
+            RendererAPI::Clear(r, g, b, a);
+        });
+    }
+
+    void Renderer::ClearMagenta()
+    {
+        Clear(1, 0, 1);
+    }
+
+    void Renderer::SetClearColor(float r, float g, float b, float a)
     {
     }
 
-    void Renderer::Submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray, const glm::mat4& transform)
+    void Renderer::DrawIndexed(uint32_t count, bool depthTest)
     {
-        shader->Bind();
-        shader->UploadUniformMat4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);
-        shader->UploadUniformMat4("u_Transform", transform);
-        
-        vertexArray->Bind();
-        RenderCommand::DrawIndexed(vertexArray);
+        CPBR_RENDER_2(count, depthTest, {
+            RendererAPI::DrawIndexed(count, depthTest);
+        });
     }
+
+    void Renderer::WaitAndRender()
+    {
+        s_Instance->m_CommandQueue.Execute();
+    }
+
 }

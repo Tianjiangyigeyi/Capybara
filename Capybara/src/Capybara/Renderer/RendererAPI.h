@@ -1,26 +1,42 @@
 ﻿#pragma once
-#include "VertexArray.h"
-#include "glm/vec4.hpp"
 
 
 namespace Capybara
 {
+    using RendererID = uint32_t;
+    enum class RendererAPIType
+    {
+        None = 0,
+        OpenGL = 1
+    };
+    
+    struct RenderAPICapabilities
+    {
+        std::string Vendor;
+        std::string Renderer;
+        std::string Version;
+
+        int MaxSamples;
+        float MaxAnisotropy;
+    };
+    
     class RendererAPI
     {
     public:
-        enum class API
+        static void Init();
+        static void Shutdown();
+        static void SetClearColor(float r, float g, float b, float a);
+        static void Clear(float r, float g, float b, float a);
+        static void DrawIndexed(unsigned int count, bool depthTest = true);
+        inline static RenderAPICapabilities& GetCapabilities()
         {
-            None = 0,
-            OpenGL = 1
-        };
-    public:
-        virtual void SetClearColor(const glm::vec4& color) = 0;
-        virtual void Clear() = 0;
-
-        virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray) = 0;
-        inline static API GetAPI() { return  s_API; }
+            static RenderAPICapabilities caps;
+            return caps;
+        }
+        inline static RendererAPIType Current() { return  s_CurrentRendererAPI; }
     private:
-        static API s_API;
+        static void LoadRequiredAssets();
+        static RendererAPIType s_CurrentRendererAPI;
     };
 
 }

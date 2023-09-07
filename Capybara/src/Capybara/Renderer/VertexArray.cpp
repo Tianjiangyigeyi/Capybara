@@ -1,24 +1,20 @@
 ﻿#include "precomp.h"
+#include "VertexArray.h"
 
 #include "Renderer.h"
-#include "VertexArray.h"
-#include "Platform/OpenGL/OpenGLVertexArray.h"
+#include "Capybara/Platform/OpenGL/OpenGLVertexArray.h"
 
-namespace Capybara
-{
+namespace Capybara {
 
-    VertexArray* VertexArray::Create()
+    Ref<VertexArray> VertexArray::Create()
     {
-        switch (Renderer::GetAPI())
+        switch (RendererAPI::Current())
         {
-        case RendererAPI::API::None:
-            CPBR_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
-            return nullptr;
-        case RendererAPI::API::OpenGL:
-            return new OpenGLVertexArray();
+        case RendererAPIType::None:    CPBR_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
+        case RendererAPIType::OpenGL:  return std::make_shared<OpenGLVertexArray>();
         }
-        
-        CPBR_CORE_ASSERT(false, "Unknown RendererAPI!");
+
+        CPBR_CORE_ASSERT(false, "Unknown RendererAPI");
         return nullptr;
     }
 

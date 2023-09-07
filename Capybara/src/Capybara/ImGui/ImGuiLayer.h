@@ -1,9 +1,7 @@
 ﻿#pragma once
+#include "precomp.h"
+#include "Capybara/Core/Layer.h"
 
-#include "Capybara/Layer.h"
-#include "Capybara/Events/ApplicationEvent.h"
-#include "Capybara/Events/MouseEvent.h"
-#include "Capybara/Events/KeyEvent.h"
 
 namespace Capybara
 {
@@ -11,7 +9,8 @@ namespace Capybara
     {
     public:
         ImGuiLayer();
-        ~ImGuiLayer();
+        ImGuiLayer(const std::string& name);
+        virtual ~ImGuiLayer();
 
         virtual void OnAttach() override;
         virtual void OnDetach() override;
@@ -19,6 +18,7 @@ namespace Capybara
         
         void Begin();
         void End();
+        
     private:
         float m_Time = 0.0f;
     };

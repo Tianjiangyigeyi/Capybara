@@ -1,35 +1,44 @@
 ﻿#include "precomp.h"
-#include "Buffer.h"
-#include "Renderer.h"
-#include "Platform/OpenGL/OpenGLBuffer.h"
+#include "Capybara/Platform/OpenGL/OpenGLBuffer.h"
 
 namespace Capybara
 {
-    VertexBuffer* VertexBuffer::Create(float* vertices, uint32_t size)
+    Ref<VertexBuffer> VertexBuffer::Create(void* data, uint32_t size, VertexBufferUsage usage)
     {
-        switch (Renderer::GetAPI())
+        switch (RendererAPI::Current())
         {
-        case RendererAPI::API::None:
-            CPBR_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
+        case RendererAPIType::None:
             return nullptr;
-        case RendererAPI::API::OpenGL:
-            return new OpenGLVertexBuffer(vertices, size);
+        case RendererAPIType::OpenGL:
+            return std::make_shared<OpenGLVertexBuffer>(data, size, usage);
         }
         
         CPBR_CORE_ASSERT(false, "Unknown RendererAPI!");
         return nullptr;
     }
     
-
-    IndexBuffer* IndexBuffer::Create(uint32_t* indices, uint32_t count)
+    Ref<VertexBuffer> VertexBuffer::Create(uint32_t size, VertexBufferUsage usage)
     {
-        switch (Renderer::GetAPI())
+        switch (RendererAPI::Current())
         {
-        case RendererAPI::API::None:
-            CPBR_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
+        case RendererAPIType::None:
             return nullptr;
-        case RendererAPI::API::OpenGL:
-            return new OpenGLIndexBuffer(indices, count);
+        case RendererAPIType::OpenGL:
+            return std::make_shared<OpenGLVertexBuffer>(size, usage);
+        }
+        
+        CPBR_CORE_ASSERT(false, "Unknown RendererAPI!");
+        return nullptr;
+    }
+
+    Ref<IndexBuffer> IndexBuffer::Create(void *data, uint32_t size)
+    {
+        switch (RendererAPI::Current())
+        {
+        case RendererAPIType::None:
+            return nullptr;
+        case RendererAPIType::OpenGL:
+            return std::make_shared<OpenGLIndexBuffer>(data, size);
         }
         
         CPBR_CORE_ASSERT(false, "Unknown RendererAPI!");

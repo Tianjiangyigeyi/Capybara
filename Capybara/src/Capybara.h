@@ -1,31 +1,28 @@
-﻿#pragma once
+﻿//
+// Note:	this file is to be included in client applications ONLY
+//			NEVER include this file anywhere in the engine codebase
+//
+#pragma once
 
-// For use by Capybara applications
+#include "Capybara/Core/Application.h"
+#include "Capybara/Core/Log.h"
+#include "Capybara/Core/TimeStep.h"
 
-#include "Capybara/Application.h"
-#include "Capybara/Layer.h"
-#include "Capybara/Log.h"
+#include "Capybara/Core/Events/Event.h"
+#include "Capybara/Core/Events/ApplicationEvent.h"
+#include "Capybara/Core/Events/KeyEvent.h"
+#include "Capybara/Core/Events/MouseEvent.h"
 
-#include "Capybara/Input.h"
-#include "Capybara/KeyCodes.h"
-#include "Capybara/MouseButtonCodes.h"
+#include "imgui/imgui.h"
 
-#include "Capybara/ImGui/ImGuiLayer.h"
-
-#include "Capybara/Core/Timestep.h"
-
-// ---------- Renderer ----------
+// --- Capybara Render API ------------------------------
 #include "Capybara/Renderer/Renderer.h"
-#include "Capybara/Renderer/RenderCommand.h"
-
+#include "Capybara/Renderer/Framebuffer.h"
 #include "Capybara/Renderer/Buffer.h"
-#include "Capybara/Renderer/Shader.h"
 #include "Capybara/Renderer/VertexArray.h"
-
-#include "Capybara/Renderer/OrthographicCamera.h"
-// ---------------------------------
-
-
-// ---------- Entry point ----------
-#include "Capybara/EntryPoint.h"
-// ---------------------------------
+#include "Capybara/Renderer/Texture.h"
+#include "Capybara/Renderer/Shader.h"
+#include "Capybara/Renderer/Mesh.h"
+#include "Capybara/Renderer/Camera.h"
+#include "Capybara/Renderer/Material.h"
+// ---------------------------------------------------
