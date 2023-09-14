@@ -20,6 +20,7 @@
 
 #include "Capybara/Renderer/Buffer.h"
 #include "Capybara/Renderer/Shader.h"
+#include "Capybara/Renderer/Texture.h"
 #include "Capybara/Renderer/VertexArray.h"
 
 #include "Capybara/Renderer/OrthographicCamera.h"

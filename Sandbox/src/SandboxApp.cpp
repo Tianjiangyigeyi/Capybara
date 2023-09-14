@@ -19,11 +19,11 @@ public:
 			 0.5f, -0.5f, 0.0f, 0.2f, 0.2f, 0.8f, 1.0f,
 			 0.0f,  0.5f, 0.0f, 0.8f, 0.8f, 0.2f, 1.0f
 		};
-		float vertices2[4 * 3] = {
-			-0.5f, -0.5f, 0.0f, 
-			 0.5f, -0.5f, 0.0f, 
-			 0.5f,  0.5f, 0.0f,
-			 -0.5f,  0.5f, 0.0f
+		float vertices2[4 * 5] = {
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+			 -0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};
 		unsigned int indices[3] = { 0, 1, 2 };
 		unsigned int indices2[6] = { 0, 1, 2, 2, 3, 0};
@@ -81,11 +81,40 @@ public:
 				color = vec4(u_Color, 1.0);
 			}
 		)";
+		
+		std::string textureShaderVertexSrc = R"(
+			#version 330 core
+			layout(location = 0) in vec3 a_Position;
+			layout(location = 1) in vec2 a_TexCoord;
 
-		std::shared_ptr<Capybara::VertexBuffer> squareVB;
-		std::shared_ptr<Capybara::IndexBuffer> squareIB;
-		std::shared_ptr<Capybara::VertexBuffer> vertexBuffer;
-		std::shared_ptr<Capybara::IndexBuffer> indexBuffer;
+			uniform mat4 u_ViewProjection;			
+			uniform mat4 u_Transform;			
+
+			out vec2 v_TexCoord;
+
+			void main()
+			{
+				v_TexCoord = a_TexCoord;
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
+			}
+		)";
+		std::string textureShaderFragmentSrc = R"(
+			#version 330 core
+			layout(location = 0) out vec4 color;
+			
+			in vec2 v_TexCoord;
+
+			uniform sampler2D u_Texture;
+			void main() 
+			{
+				color = texture(u_Texture, v_TexCoord);
+			}
+		)";
+
+		Capybara::Ref<Capybara::VertexBuffer> squareVB;
+		Capybara::Ref<Capybara::IndexBuffer> squareIB;
+		Capybara::Ref<Capybara::VertexBuffer> vertexBuffer;
+		Capybara::Ref<Capybara::IndexBuffer> indexBuffer;
 		
 		m_VertexArray.reset(Capybara::VertexArray::Create());
 		m_SquareVA.reset(Capybara::VertexArray::Create());
@@ -107,11 +136,17 @@ public:
 		m_VertexArray->SetIndexBuffer(indexBuffer);
 		
 		squareVB->SetLayout({
-			{ Capybara::ShaderDataType::Float3, "a_Position" }
+			{ Capybara::ShaderDataType::Float3, "a_Position" },
+			{ Capybara::ShaderDataType::Float2, "a_TexCoord" }
 		});
 		m_SquareVA->AddVertexBuffer(squareVB);
 		m_SquareVA->SetIndexBuffer(squareIB);
 		
+		m_TextureShader.reset(Capybara::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc));
+
+		m_Texture = Capybara::Texture2D::Create("assets/textures/Checkerboard.png");
+		std::dynamic_pointer_cast<Capybara::OpenGLShader>(m_TextureShader)->Bind();
+		std::dynamic_pointer_cast<Capybara::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
 	}
 	void OnUpdate(Capybara::Timestep ts) override
 	{
@@ -171,8 +206,11 @@ public:
 			}
 			
 		}
-		Capybara::Renderer::Submit(m_Shader, m_VertexArray);
+		// Triangle
+		// Capybara::Renderer::Submit(m_Shader, m_VertexArray);
 
+		m_Texture->Bind();
+		Capybara::Renderer::Submit(m_TextureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 		Capybara::Renderer::EndScene();
 			
 	}
@@ -188,11 +226,15 @@ public:
 	}
 
 private:
-	std::shared_ptr<Capybara::Shader> m_Shader;
-	std::shared_ptr<Capybara::Shader> m_SquareShader;
+	Capybara::Ref<Capybara::Shader> m_Shader;
+	Capybara::Ref<Capybara::Shader> m_SquareShader;
+	Capybara::Ref<Capybara::Shader> m_TextureShader;
 
-	std::shared_ptr<Capybara::VertexArray> m_VertexArray;
-	std::shared_ptr<Capybara::VertexArray> m_SquareVA;
+	Capybara::Ref<Capybara::VertexArray> m_VertexArray;
+	Capybara::Ref<Capybara::VertexArray> m_SquareVA;
+
+	Capybara::Ref<Capybara::Texture2D> m_Texture;;
+
 		
 	Capybara::OrthographicCamera m_Camera;
 	glm::vec3 m_CameraPosition;

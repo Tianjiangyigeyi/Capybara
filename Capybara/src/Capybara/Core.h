@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include <memory>
+
 #ifdef CPBR_PLATFORM_WINDOWS
 #if CPBR_DYNAMIC_LINK
     #ifdef CPBR_BUILD_DLL
@@ -29,3 +31,14 @@
 
 #define BIT(x) 1 << x
 #define CPBR_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
+
+
+namespace Capybara
+{
+    template <typename T>
+    using Scope = std::unique_ptr<T>;
+    
+    template <typename T>
+    using Ref = std::shared_ptr<T>;
+
+}

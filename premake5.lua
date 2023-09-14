@@ -15,6 +15,7 @@ IncludeDir["GLFW"] = "Capybara/vendor/GLFW/include"
 IncludeDir["Glad"] = "Capybara/vendor/Glad/include"
 IncludeDir["ImGui"] = "Capybara/vendor/imgui"
 IncludeDir["glm"] = "Capybara/vendor/glm"
+IncludeDir["stb_image"] = "Capybara/vendor/stb_image"
 
 include "Capybara/vendor/GLFW"
 include "Capybara/vendor/Glad"
@@ -40,8 +41,9 @@ project "Capybara"
         "%{prj.name}/src/**.h", 
         "%{prj.name}/src/**.cpp",
         "%{prj.name}/vendor/glm/glm/**.hpp",
-        "%{prj.name}/vendor/glm/glm/**.inl"
-        
+        "%{prj.name}/vendor/glm/glm/**.inl",
+        "%{prj.name}/vendor/stb_image/**.h",
+        "%{prj.name}/vendor/stb_image/**.cpp"
     }
 
     defines
@@ -55,7 +57,8 @@ project "Capybara"
      "%{IncludeDir.GLFW}",
      "%{IncludeDir.Glad}",
      "%{IncludeDir.ImGui}",
-     "%{IncludeDir.glm}"
+     "%{IncludeDir.glm}",
+     "%{IncludeDir.stb_image}"
     }
 
     links 
