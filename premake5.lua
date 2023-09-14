@@ -26,7 +26,7 @@ project "Capybara"
     location "Capybara"
     kind "StaticLib" -- lib
     language "C++"
-    cppdialect "C++17"
+    cppdialect "C++20"
     staticruntime "on"
 
     targetdir("bin/" .. outputdir .. "/%{prj.name}")
@@ -96,7 +96,7 @@ project "Sandbox"
     location "Sandbox"
     kind "ConsoleApp" -- .exe
     language "C++"
-    cppdialect "C++17"
+    cppdialect "C++20"
     staticruntime "on" 
     
     targetdir("bin/" .. outputdir .. "/%{prj.name}")
