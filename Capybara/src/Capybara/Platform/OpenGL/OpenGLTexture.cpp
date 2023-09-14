@@ -171,6 +171,7 @@ namespace Capybara {
 			for (size_t y = 0; y < faceHeight; y++)
 			{
 				size_t yOffset = y + faceHeight;
+				
 				for (size_t x = 0; x < faceWidth; x++)
 				{
 					size_t xOffset = x + i * faceWidth;
