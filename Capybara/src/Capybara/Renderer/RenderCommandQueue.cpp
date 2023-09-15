@@ -25,7 +25,7 @@ namespace Capybara {
         *(RenderCommandFn*)m_CommandBufferPtr = fn;
         m_CommandBufferPtr += sizeof(RenderCommandFn);
 
-        *(int*)m_CommandBufferPtr = size;
+        *(uint32_t*)m_CommandBufferPtr = size;
         m_CommandBufferPtr += sizeof(unsigned int);
 
         void* memory = m_CommandBufferPtr;
