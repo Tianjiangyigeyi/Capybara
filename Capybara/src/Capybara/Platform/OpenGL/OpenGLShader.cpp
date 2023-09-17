@@ -7,6 +7,8 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Capybara/Renderer/Renderer.h"
+
 namespace Capybara {
 
 #define UNIFORM_LOGGING 0
@@ -43,23 +45,28 @@ namespace Capybara {
 	void OpenGLShader::Load(const std::string& source)
 	{
 		m_ShaderSource = PreProcess(source);
-		Parse();
+		if (!m_IsCompute)
+			Parse();
 
-		CPBR_RENDER_S({
-			if (self->m_RendererID)
-				glDeleteShader(self->m_RendererID);
+		Renderer::Submit([this]()
+		{
+			if (m_RendererID)
+				glDeleteShader(m_RendererID);
 
-			self->CompileAndUploadShader();
-			self->ResolveUniforms();
-			self->ValidateUniforms();
-
-			if (self->m_Loaded)
+			CompileAndUploadShader();
+			if (!m_IsCompute)
 			{
-				for (auto& callback : self->m_ShaderReloadedCallbacks)
+				ResolveUniforms();
+				ValidateUniforms();
+			}
+
+			if (m_Loaded)
+			{
+				for (auto& callback : m_ShaderReloadedCallbacks)
 					callback();
 			}
 
-			self->m_Loaded = true;
+			m_Loaded = true;
 		});
 	}
 
@@ -70,8 +77,8 @@ namespace Capybara {
 
 	void OpenGLShader::Bind()
 	{
-		CPBR_RENDER_S({
-			glUseProgram(self->m_RendererID);
+		Renderer::Submit([=]() {
+			glUseProgram(m_RendererID);
 		});
 	}
 
@@ -89,7 +96,7 @@ namespace Capybara {
 		}
 		else
 		{
-			CPBR_CORE_WARN("Could not read shader file {0}", filepath);
+			CPBR_CORE_ASSERT(false, "Could not load shader!");
 		}
 
 		return result;
@@ -108,11 +115,19 @@ namespace Capybara {
 			CPBR_CORE_ASSERT(eol != std::string::npos, "Syntax error");
 			size_t begin = pos + typeTokenLength + 1;
 			std::string type = source.substr(begin, eol - begin);
-			CPBR_CORE_ASSERT(type == "vertex" || type == "fragment" || type == "pixel", "Invalid shader type specified");
+			CPBR_CORE_ASSERT(type == "vertex" || type == "fragment" || type == "pixel" || type == "compute", "Invalid shader type specified");
 
 			size_t nextLinePos = source.find_first_not_of("\r\n", eol);
 			pos = source.find(typeToken, nextLinePos);
-			shaderSources[ShaderTypeFromString(type)] = source.substr(nextLinePos, pos - (nextLinePos == std::string::npos ? source.size() - 1 : nextLinePos));
+			auto shaderType = ShaderTypeFromString(type);
+			shaderSources[shaderType] = source.substr(nextLinePos, pos - (nextLinePos == std::string::npos ? source.size() - 1 : nextLinePos));
+
+			// Compute shaders cannot contain other types
+			if (shaderType == GL_COMPUTE_SHADER)
+			{
+				m_IsCompute = true;
+				break;
+			}
 		}
 
 		return shaderSources;
@@ -519,6 +534,8 @@ namespace Capybara {
 			return GL_VERTEX_SHADER;
 		if (type == "fragment" || type == "pixel")
 			return GL_FRAGMENT_SHADER;
+		if (type == "compute")
+			return GL_COMPUTE_SHADER;
 
 		return GL_NONE;
 	}
@@ -594,17 +611,17 @@ namespace Capybara {
 
 	void OpenGLShader::SetVSMaterialUniformBuffer(Buffer buffer)
 	{
-		CPBR_RENDER_S1(buffer, {
-			glUseProgram(self->m_RendererID);
-			self->ResolveAndSetUniforms(self->m_VSMaterialUniformBuffer, buffer);
+		Renderer::Submit([this, buffer]() {
+			glUseProgram(m_RendererID);
+			ResolveAndSetUniforms(m_VSMaterialUniformBuffer, buffer);
 		});
 	}
 
 	void OpenGLShader::SetPSMaterialUniformBuffer(Buffer buffer)
 	{
-		CPBR_RENDER_S1(buffer, {
-			glUseProgram(self->m_RendererID);
-			self->ResolveAndSetUniforms(self->m_PSMaterialUniformBuffer, buffer);
+		Renderer::Submit([this, buffer]() {
+			glUseProgram(m_RendererID);
+			ResolveAndSetUniforms(m_PSMaterialUniformBuffer, buffer);
 		});
 	}
 
@@ -733,59 +750,68 @@ namespace Capybara {
 			const UniformDecl& decl = uniformBuffer.GetUniforms()[i];
 			switch (decl.Type)
 			{
-			case UniformType::Float:
-			{
-				const std::string& name = decl.Name;
-				float value = *(float*)(uniformBuffer.GetBuffer() + decl.Offset);
-				CPBR_RENDER_S2(name, value, {
-					self->UploadUniformFloat(name, value);
+				case UniformType::Float:
+				{
+					const std::string& name = decl.Name;
+					float value = *(float*)(uniformBuffer.GetBuffer() + decl.Offset);
+					Renderer::Submit([=]() {
+						UploadUniformFloat(name, value);
 					});
-			}
-			case UniformType::Float3:
-			{
-				const std::string& name = decl.Name;
-				glm::vec3& values = *(glm::vec3*)(uniformBuffer.GetBuffer() + decl.Offset);
-				CPBR_RENDER_S2(name, values, {
-					self->UploadUniformFloat3(name, values);
+				}
+				case UniformType::Float3:
+				{
+					const std::string& name = decl.Name;
+					glm::vec3& values = *(glm::vec3*)(uniformBuffer.GetBuffer() + decl.Offset);
+					Renderer::Submit([=]() {
+						UploadUniformFloat3(name, values);
 					});
-			}
-			case UniformType::Float4:
-			{
-				const std::string& name = decl.Name;
-				glm::vec4& values = *(glm::vec4*)(uniformBuffer.GetBuffer() + decl.Offset);
-				CPBR_RENDER_S2(name, values, {
-					self->UploadUniformFloat4(name, values);
+				}
+				case UniformType::Float4:
+				{
+					const std::string& name = decl.Name;
+					glm::vec4& values = *(glm::vec4*)(uniformBuffer.GetBuffer() + decl.Offset);
+					Renderer::Submit([=]() {
+						UploadUniformFloat4(name, values);
 					});
-			}
-			case UniformType::Matrix4x4:
-			{
-				const std::string& name = decl.Name;
-				glm::mat4& values = *(glm::mat4*)(uniformBuffer.GetBuffer() + decl.Offset);
-				CPBR_RENDER_S2(name, values, {
-					self->UploadUniformMat4(name, values);
+				}
+				case UniformType::Matrix4x4:
+				{
+					const std::string& name = decl.Name;
+					glm::mat4& values = *(glm::mat4*)(uniformBuffer.GetBuffer() + decl.Offset);
+					Renderer::Submit([=]() {
+						UploadUniformMat4(name, values);
 					});
-			}
+				}
 			}
 		}
 	}
 
 	void OpenGLShader::SetFloat(const std::string& name, float value)
 	{
-		CPBR_RENDER_S2(name, value, {
-			self->UploadUniformFloat(name, value);
+		Renderer::Submit([=]() {
+			UploadUniformFloat(name, value);
 		});
 	}
 
 	void OpenGLShader::SetMat4(const std::string& name, const glm::mat4& value)
 	{
-		CPBR_RENDER_S2(name, value, {
-			self->UploadUniformMat4(name, value);
+		Renderer::Submit([=]() {
+			UploadUniformMat4(name, value);
 		});
 	}
 
-	void OpenGLShader::SetMat4FromRenderThread(const std::string& name, const glm::mat4& value)
+	void OpenGLShader::SetMat4FromRenderThread(const std::string& name, const glm::mat4& value, bool bind)
 	{
-		UploadUniformMat4(name, value);
+		if (bind)
+		{
+			UploadUniformMat4(name, value);
+		}
+		else
+		{
+			int location = glGetUniformLocation(m_RendererID, name.c_str());
+			if (location != -1)
+				UploadUniformMat4(location, value);
+		}
 	}
 
 	void OpenGLShader::UploadUniformInt(uint32_t location, int32_t value)

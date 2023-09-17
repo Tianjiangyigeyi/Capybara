@@ -4,7 +4,7 @@
 
 namespace Capybara {
 
-    class CAPYBARA_API RenderCommandQueue
+    class RenderCommandQueue
     {
     public:
         typedef void(*RenderCommandFn)(void*);

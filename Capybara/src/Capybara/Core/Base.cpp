@@ -1,13 +1,12 @@
 ﻿#include "precomp.h"
-
 #include "Base.h"
 
 #include "Log.h"
 
 #define CAPYBARA_BUILD_ID "v0.1a"
 
-namespace Capybara
-{
+namespace Capybara {
+
     void InitializeCore()
     {
         Capybara::Log::Init();
@@ -20,4 +19,5 @@ namespace Capybara
     {
         CPBR_CORE_TRACE("Shutting down...");
     }
+
 }

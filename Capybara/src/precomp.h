@@ -18,3 +18,5 @@
 #include <Capybara/Core/Base.h>
 #include <Capybara/Core/Log.h>
 #include <Capybara/Core/Events/Event.h>
+
+#include <Capybara/Core/Math/Mat4.h>

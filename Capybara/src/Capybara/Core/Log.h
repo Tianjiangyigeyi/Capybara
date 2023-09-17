@@ -3,15 +3,16 @@
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/fmt/ostr.h"
+
 namespace Capybara
 {
-    class CAPYBARA_API Log
+    class Log
     {
     public:
         static void Init()
         {
             spdlog::set_pattern("%^[%T] %n: %v%$");
-        
+
             s_CoreLogger = spdlog::stdout_color_mt("CAPYBARA");
             s_CoreLogger->set_level(spdlog::level::trace);
 
@@ -21,25 +22,18 @@ namespace Capybara
 
         inline static std::shared_ptr<spdlog::logger>& GetCoreLogger()
         {
-            // while (s_core_logger_ == nullptr)
-            // {
-            //     Init();
-            // }
             return s_CoreLogger;
         }
+
         inline static std::shared_ptr<spdlog::logger>& GetClientLogger()
-        { 
-            // while (s_client_logger_ == nullptr)
-            // {
-            //     Init();
-            // }
+        {
             return s_ClientLogger;
         }
+
     private:
         static std::shared_ptr<spdlog::logger> s_CoreLogger;
         static std::shared_ptr<spdlog::logger> s_ClientLogger;
     };
-    
 }
 
 // Core log Macros

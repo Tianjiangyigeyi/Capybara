@@ -3,7 +3,7 @@
 #include "Capybara/Core/Base.h"
 #include "Capybara/Core/Buffer.h"
 
-#include "Capybara/Renderer/Renderer.h"
+#include "Capybara/Renderer/RendererAPI.h"
 #include "Capybara/Renderer/ShaderUniform.h"
 
 #include <string>
@@ -112,12 +112,13 @@ namespace Capybara
 		virtual void Reload() = 0;
 
 		virtual void Bind() = 0;
+		virtual RendererID GetRendererID() const = 0;
 		virtual void UploadUniformBuffer(const UniformBufferBase& uniformBuffer) = 0;
 
 		// Temporary while we don't have materials
 		virtual void SetFloat(const std::string& name, float value) = 0;
 		virtual void SetMat4(const std::string& name, const glm::mat4& value) = 0;
-		virtual void SetMat4FromRenderThread(const std::string& name, const glm::mat4& value) = 0;
+		virtual void SetMat4FromRenderThread(const std::string& name, const glm::mat4& value, bool bind = true) = 0;
 
 		virtual const std::string& GetName() const = 0;
 
@@ -132,6 +133,8 @@ namespace Capybara
 
 		virtual const ShaderUniformBufferList& GetVSRendererUniforms() const = 0;
 		virtual const ShaderUniformBufferList& GetPSRendererUniforms() const = 0;
+		virtual bool HasVSMaterialUniformBuffer() const = 0;
+		virtual bool HasPSMaterialUniformBuffer() const = 0;
 		virtual const ShaderUniformBufferDeclaration& GetVSMaterialUniformBuffer() const = 0;
 		virtual const ShaderUniformBufferDeclaration& GetPSMaterialUniformBuffer() const = 0;
 

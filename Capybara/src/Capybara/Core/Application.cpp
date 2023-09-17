@@ -1,7 +1,7 @@
 ﻿#include "precomp.h"
 #include "Application.h"
 
-#include "Capybara//Renderer/Renderer.h"
+#include "Capybara/Renderer/Renderer.h"
 #include "Capybara/Renderer/Framebuffer.h"
 #include <GLFW/glfw3.h>
 
@@ -11,29 +11,30 @@
 #include <GLFW/glfw3native.h>
 #include <Windows.h>
 
-namespace Capybara
-{
+namespace Capybara {
+
 #define BIND_EVENT_FN(x) [this](auto&&... args) -> decltype(auto) { return this->x(std::forward<decltype(args)>(args)...); }
 
 	Application* Application::s_Instance = nullptr;
-		
+
 	Application::Application(const ApplicationProps& props)
 	{
-		CPBR_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
-		
+
 		m_Window = std::unique_ptr<Window>(Window::Create(WindowProps(props.Name, props.WindowWidth, props.WindowHeight)));
-		m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
+		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 		m_Window->SetVSync(false);
+
 		m_ImGuiLayer = new ImGuiLayer("ImGui");
 		PushOverlay(m_ImGuiLayer);
 
 		Renderer::Init();
-		Renderer::Get().WaitAndRender();
+		Renderer::WaitAndRender();
 	}
 
 	Application::~Application()
 	{
+
 	}
 
 	void Application::PushLayer(Layer* layer)
@@ -42,11 +43,10 @@ namespace Capybara
 		layer->OnAttach();
 	}
 
-	void Application::PushOverlay(Layer* overlay)
+	void Application::PushOverlay(Layer* layer)
 	{
-		m_LayerStack.PushOverlay(overlay);
-		overlay->OnAttach();
-
+		m_LayerStack.PushOverlay(layer);
+		layer->OnAttach();
 	}
 
 	void Application::RenderImGui()
@@ -67,63 +67,65 @@ namespace Capybara
 		m_ImGuiLayer->End();
 	}
 
-	void Application::OnEvent(Event& event)
-	{
-		EventDispatcher dispatcher(event);
-		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(Application::OnWindowResize));
-		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
-		// CPBR_CORE_TRACE("{0}", event);
-
-		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); )
-		{
-			(*--it)->OnEvent(event);
-			if (event.m_Handled)
-			{
-				break;
-			}
-		}
-	}
-
-	bool Application::OnWindowResize(WindowResizeEvent& event)
-	{
-		int width = event.GetWidth(), height = event.GetHeight();	
-		if (width == 0 || height == 0)
-		{
-			m_Minimized = true;
-			return false;
-		}
-		m_Minimized = false;
-		CPBR_RENDER_2(width, height, { glViewport(0, 0, width, height); });
-		auto& fbs = FrameBufferPool::GetGlobal()->GetAll();
-		for (auto& fb : fbs)
-			fb->Resize(width, height);
-		return false;
-	}
-	
-	void Application::Run() 
+	void Application::Run()
 	{
 		OnInit();
 		while (m_Running)
 		{
 			if (!m_Minimized)
 			{
-				for (auto layer : m_LayerStack)
-				{
+				for (Layer* layer : m_LayerStack)
 					layer->OnUpdate(m_TimeStep);
-				}
-				Application* app = this;
-				CPBR_RENDER_1(app, { app->RenderImGui(); });
 
-				Renderer::Get().WaitAndRender();
+				// Render ImGui on render thread
+				Application* app = this;
+				Renderer::Submit([app]() { app->RenderImGui(); });
+
+				Renderer::WaitAndRender();
 			}
-			
 			m_Window->OnUpdate();
+
 			float time = GetTime();
 			m_TimeStep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 		}
+		OnShutdown();
 	}
-	bool Application::OnWindowClose(WindowCloseEvent &event)
+
+	void Application::OnEvent(Event& event)
+	{
+		EventDispatcher dispatcher(event);
+		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(OnWindowResize));
+		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
+
+		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); )
+		{
+			(*--it)->OnEvent(event);
+			if (event.m_Handled)
+				break;
+		}
+	}
+
+	bool Application::OnWindowResize(WindowResizeEvent& e)
+	{
+		int width = e.GetWidth(), height = e.GetHeight();	
+		if (width == 0 || height == 0)
+		{
+			m_Minimized = true;
+			return false;
+		}
+		m_Minimized = false;
+		Renderer::Submit([=]() { glViewport(0, 0, width, height); });
+		auto& fbs = FramebufferPool::GetGlobal()->GetAll();
+		for (auto& fb : fbs)
+		{
+			if (auto fbp = fb.lock())
+				fbp->Resize(width, height);
+		}
+		return false;
+	}
+
+	bool Application::OnWindowClose(WindowCloseEvent& e)
 	{
 		m_Running = false;
 		return true;
@@ -158,4 +160,5 @@ namespace Capybara
 	{
 		return (float)glfwGetTime();
 	}
+
 }

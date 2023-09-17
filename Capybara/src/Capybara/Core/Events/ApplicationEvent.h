@@ -1,16 +1,17 @@
-﻿// Finished
-#pragma once
+﻿#pragma once
 
 #include "Event.h"
 
-namespace Capybara
-{
-    class CAPYBARA_API WindowResizeEvent : public Event
+#include <sstream>
+
+namespace Capybara {
+
+    // TODO: Should this store previous size?
+    class WindowResizeEvent : public Event
     {
     public:
         WindowResizeEvent(unsigned int width, unsigned int height)
-            : m_Width(width), m_Height(height)
-        {}
+            : m_Width(width), m_Height(height) {}
 
         inline unsigned int GetWidth() const { return m_Width; }
         inline unsigned int GetHeight() const { return m_Height; }
@@ -28,7 +29,7 @@ namespace Capybara
         unsigned int m_Width, m_Height;
     };
 
-    class CAPYBARA_API WindowCloseEvent : public Event
+    class WindowCloseEvent : public Event
     {
     public:
         WindowCloseEvent() {}
@@ -36,8 +37,8 @@ namespace Capybara
         EVENT_CLASS_TYPE(WindowClose)
         EVENT_CLASS_CATEGORY(EventCategoryApplication)
     };
-    
-    class CAPYBARA_API AppTickEvent : public Event
+
+    class AppTickEvent : public Event
     {
     public:
         AppTickEvent() {}
@@ -45,8 +46,8 @@ namespace Capybara
         EVENT_CLASS_TYPE(AppTick)
         EVENT_CLASS_CATEGORY(EventCategoryApplication)
     };
-    
-    class CAPYBARA_API AppUpdateEvent : public Event
+
+    class AppUpdateEvent : public Event
     {
     public:
         AppUpdateEvent() {}
@@ -54,8 +55,8 @@ namespace Capybara
         EVENT_CLASS_TYPE(AppUpdate)
         EVENT_CLASS_CATEGORY(EventCategoryApplication)
     };
-    
-    class CAPYBARA_API AppRenderEvent : public Event
+
+    class AppRenderEvent : public Event
     {
     public:
         AppRenderEvent() {}

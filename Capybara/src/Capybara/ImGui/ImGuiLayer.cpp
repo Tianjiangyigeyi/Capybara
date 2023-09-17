@@ -10,7 +10,7 @@
 #include "Capybara/Core/Application.h"
 
 #include <GLFW/glfw3.h>
-
+#include "ImGuizmo.h"
 #include "Capybara/Renderer/Renderer.h"
 
 namespace Capybara
@@ -72,6 +72,8 @@ namespace Capybara
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+        ImGuizmo::BeginFrame();
+
     }
 
     void ImGuiLayer::End()

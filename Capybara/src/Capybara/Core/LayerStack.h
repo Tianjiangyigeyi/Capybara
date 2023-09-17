@@ -3,7 +3,7 @@
 #include "Capybara/Core//Layer.h"
 namespace Capybara
 {
-    class CAPYBARA_API LayerStack
+    class LayerStack
     {
     public:
         LayerStack();

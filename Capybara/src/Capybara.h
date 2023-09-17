@@ -17,6 +17,8 @@
 
 // --- Capybara Render API ------------------------------
 #include "Capybara/Renderer/Renderer.h"
+#include "Capybara/Renderer/RenderPass.h"
+#include "Capybara/Renderer/SceneRenderer.h"
 #include "Capybara/Renderer/Framebuffer.h"
 #include "Capybara/Renderer/Buffer.h"
 #include "Capybara/Renderer/VertexArray.h"
@@ -26,3 +28,6 @@
 #include "Capybara/Renderer/Camera.h"
 #include "Capybara/Renderer/Material.h"
 // ---------------------------------------------------
+
+#include "Capybara/Scene/Entity.h"
+#include "Capybara/Scene/Scene.h"

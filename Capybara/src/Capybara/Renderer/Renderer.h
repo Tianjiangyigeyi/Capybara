@@ -2,6 +2,9 @@
 
 #include "RenderCommandQueue.h"
 #include "RendererAPI.h"
+#include "RenderPass.h"
+
+#include "Mesh.h"
 
 namespace Capybara {
 
@@ -23,146 +26,41 @@ namespace Capybara {
 		static void ClearMagenta();
 
 		static void Init();
-		
-		static const Scope<ShaderLibrary>& GetShaderLibrary() { return Get().m_ShaderLibrary; }
 
-		static void* Submit(RenderCommandFn fn, unsigned int size)
+		static const Scope<ShaderLibrary>& GetShaderLibrary();
+
+		template<typename FuncT>
+		static void Submit(FuncT&& func)
 		{
-			return s_Instance->m_CommandQueue.Allocate(fn, size);
+			auto renderCmd = [](void* ptr) {
+				auto pFunc = (FuncT*)ptr;
+				(*pFunc)();
+
+				// NOTE: Instead of destroying we could try and enforce all items to be trivally destructible
+				// however some items like uniforms which contain std::strings still exist for now
+				// static_assert(std::is_trivially_destructible_v<FuncT>, "FuncT must be trivially destructible");
+				pFunc->~FuncT();
+			};
+			auto storageBuffer = GetRenderCommandQueue().Allocate(renderCmd, sizeof(func));
+			new (storageBuffer) FuncT(std::forward<FuncT>(func));
 		}
 
-		void WaitAndRender();
+		/*static void* Submit(RenderCommandFn fn, unsigned int size)
+		{
+			return s_Instance->m_CommandQueue.Allocate(fn, size);
+		}*/
 
-		inline static Renderer& Get() { return *s_Instance; }
+		static void WaitAndRender();
+
+		// ~Actual~ Renderer here... TODO: remove confusion later
+		static void BeginRenderPass(const Ref<RenderPass>& renderPass);
+		static void EndRenderPass();
+
+		static void SubmitQuad(const Ref<MaterialInstance>& material, const glm::mat4& transform = glm::mat4(1.0f));
+		static void SubmitFullscreenQuad(const Ref<MaterialInstance>& material);
+		static void SubmitMesh(const Ref<Mesh>& mesh, const glm::mat4& transform, const Ref<MaterialInstance>& overrideMaterial = nullptr);
 	private:
-		static Renderer* s_Instance;
-
-		RenderCommandQueue m_CommandQueue;
-		Scope<ShaderLibrary> m_ShaderLibrary;
+		static RenderCommandQueue& GetRenderCommandQueue();
 	};
 
 }
-
-#define CPBR_RENDER_PASTE2(a, b) a ## b
-#define CPBR_RENDER_PASTE(a, b) CPBR_RENDER_PASTE2(a, b)
-#define CPBR_RENDER_UNIQUE(x) CPBR_RENDER_PASTE(x, __LINE__)
-
-#define CPBR_RENDER(code) \
-    struct CPBR_RENDER_UNIQUE(CPBRRenderCommand) \
-    {\
-        static void Execute(void*)\
-        {\
-            code\
-        }\
-    };\
-	{\
-		auto mem = ::Capybara::Renderer::Submit(CPBR_RENDER_UNIQUE(CPBRRenderCommand)::Execute, sizeof(CPBR_RENDER_UNIQUE(CPBRRenderCommand)));\
-		new (mem) CPBR_RENDER_UNIQUE(CPBRRenderCommand)();\
-	}\
-
-#define CPBR_RENDER_1(arg0, code) \
-	do {\
-    struct CPBR_RENDER_UNIQUE(CPBRRenderCommand) \
-    {\
-		CPBR_RENDER_UNIQUE(CPBRRenderCommand)(typename ::std::remove_const<typename ::std::remove_reference<decltype(arg0)>::type>::type arg0) \
-		: arg0(arg0) {}\
-		\
-        static void Execute(void* argBuffer)\
-        {\
-			auto& arg0 = ((CPBR_RENDER_UNIQUE(CPBRRenderCommand)*)argBuffer)->arg0;\
-            code\
-        }\
-		\
-		typename ::std::remove_const<typename ::std::remove_reference<decltype(arg0)>::type>::type arg0;\
-    };\
-	{\
-		auto mem = ::Capybara::Renderer::Submit(CPBR_RENDER_UNIQUE(CPBRRenderCommand)::Execute, sizeof(CPBR_RENDER_UNIQUE(CPBRRenderCommand)));\
-		new (mem) CPBR_RENDER_UNIQUE(CPBRRenderCommand)(arg0);\
-	} } while(0)
-
-#define CPBR_RENDER_2(arg0, arg1, code) \
-    struct CPBR_RENDER_UNIQUE(CPBRRenderCommand) \
-    {\
-		CPBR_RENDER_UNIQUE(CPBRRenderCommand)(typename ::std::remove_const<typename ::std::remove_reference<decltype(arg0)>::type>::type arg0,\
-											typename ::std::remove_const<typename ::std::remove_reference<decltype(arg1)>::type>::type arg1) \
-		: arg0(arg0), arg1(arg1) {}\
-		\
-        static void Execute(void* argBuffer)\
-        {\
-			auto& arg0 = ((CPBR_RENDER_UNIQUE(CPBRRenderCommand)*)argBuffer)->arg0;\
-			auto& arg1 = ((CPBR_RENDER_UNIQUE(CPBRRenderCommand)*)argBuffer)->arg1;\
-            code\
-        }\
-		\
-		typename ::std::remove_const<typename ::std::remove_reference<decltype(arg0)>::type>::type arg0;\
-		typename ::std::remove_const<typename ::std::remove_reference<decltype(arg1)>::type>::type arg1;\
-    };\
-	{\
-		auto mem = ::Capybara::Renderer::Submit(CPBR_RENDER_UNIQUE(CPBRRenderCommand)::Execute, sizeof(CPBR_RENDER_UNIQUE(CPBRRenderCommand)));\
-		new (mem) CPBR_RENDER_UNIQUE(CPBRRenderCommand)(arg0, arg1);\
-	}\
-
-#define CPBR_RENDER_3(arg0, arg1, arg2, code) \
-    struct CPBR_RENDER_UNIQUE(CPBRRenderCommand) \
-    {\
-		CPBR_RENDER_UNIQUE(CPBRRenderCommand)(typename ::std::remove_const<typename ::std::remove_reference<decltype(arg0)>::type>::type arg0,\
-											typename ::std::remove_const<typename ::std::remove_reference<decltype(arg1)>::type>::type arg1,\
-											typename ::std::remove_const<typename ::std::remove_reference<decltype(arg2)>::type>::type arg2) \
-		: arg0(arg0), arg1(arg1), arg2(arg2) {}\
-		\
-        static void Execute(void* argBuffer)\
-        {\
-			auto& arg0 = ((CPBR_RENDER_UNIQUE(CPBRRenderCommand)*)argBuffer)->arg0;\
-			auto& arg1 = ((CPBR_RENDER_UNIQUE(CPBRRenderCommand)*)argBuffer)->arg1;\
-			auto& arg2 = ((CPBR_RENDER_UNIQUE(CPBRRenderCommand)*)argBuffer)->arg2;\
-            code\
-        }\
-		\
-		typename ::std::remove_const<typename ::std::remove_reference<decltype(arg0)>::type>::type arg0;\
-		typename ::std::remove_const<typename ::std::remove_reference<decltype(arg1)>::type>::type arg1;\
-		typename ::std::remove_const<typename ::std::remove_reference<decltype(arg2)>::type>::type arg2;\
-    };\
-	{\
-		auto mem = ::Capybara::Renderer::Submit(CPBR_RENDER_UNIQUE(CPBRRenderCommand)::Execute, sizeof(CPBR_RENDER_UNIQUE(CPBRRenderCommand)));\
-		new (mem) CPBR_RENDER_UNIQUE(CPBRRenderCommand)(arg0, arg1, arg2);\
-	}\
-
-#define CPBR_RENDER_4(arg0, arg1, arg2, arg3, code) \
-    struct CPBR_RENDER_UNIQUE(CPBRRenderCommand) \
-    {\
-		CPBR_RENDER_UNIQUE(CPBRRenderCommand)(typename ::std::remove_const<typename ::std::remove_reference<decltype(arg0)>::type>::type arg0,\
-											typename ::std::remove_const<typename ::std::remove_reference<decltype(arg1)>::type>::type arg1,\
-											typename ::std::remove_const<typename ::std::remove_reference<decltype(arg2)>::type>::type arg2,\
-											typename ::std::remove_const<typename ::std::remove_reference<decltype(arg3)>::type>::type arg3)\
-		: arg0(arg0), arg1(arg1), arg2(arg2), arg3(arg3) {}\
-		\
-        static void Execute(void* argBuffer)\
-        {\
-			auto& arg0 = ((CPBR_RENDER_UNIQUE(CPBRRenderCommand)*)argBuffer)->arg0;\
-			auto& arg1 = ((CPBR_RENDER_UNIQUE(CPBRRenderCommand)*)argBuffer)->arg1;\
-			auto& arg2 = ((CPBR_RENDER_UNIQUE(CPBRRenderCommand)*)argBuffer)->arg2;\
-			auto& arg3 = ((CPBR_RENDER_UNIQUE(CPBRRenderCommand)*)argBuffer)->arg3;\
-            code\
-        }\
-		\
-		typename ::std::remove_const<typename ::std::remove_reference<decltype(arg0)>::type>::type arg0;\
-		typename ::std::remove_const<typename ::std::remove_reference<decltype(arg1)>::type>::type arg1;\
-		typename ::std::remove_const<typename ::std::remove_reference<decltype(arg2)>::type>::type arg2;\
-		typename ::std::remove_const<typename ::std::remove_reference<decltype(arg3)>::type>::type arg3;\
-    };\
-	{\
-		auto mem = Renderer::Submit(CPBR_RENDER_UNIQUE(CPBRRenderCommand)::Execute, sizeof(CPBR_RENDER_UNIQUE(CPBRRenderCommand)));\
-		new (mem) CPBR_RENDER_UNIQUE(CPBRRenderCommand)(arg0, arg1, arg2, arg3);\
-	}
-
-#define CPBR_RENDER_S(code) auto self = this;\
-	CPBR_RENDER_1(self, code)
-
-#define CPBR_RENDER_S1(arg0, code) auto self = this;\
-	CPBR_RENDER_2(self, arg0, code)
-
-#define CPBR_RENDER_S2(arg0, arg1, code) auto self = this;\
-	CPBR_RENDER_3(self, arg0, arg1, code)
-
-#define CPBR_RENDER_S3(arg0, arg1, arg2, code) auto self = this;\
-	CPBR_RENDER_4(self, arg0, arg1, arg2, code)

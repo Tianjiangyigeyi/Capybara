@@ -8,7 +8,7 @@ namespace Capybara {
 
     struct RenderPassSpecification
     {
-        Ref<FrameBuffer> TargetFramebuffer;
+        Ref<Framebuffer> TargetFramebuffer;
     };
 
     class RenderPass

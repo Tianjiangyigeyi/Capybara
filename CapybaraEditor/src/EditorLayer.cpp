@@ -1,5 +1,6 @@
-#include "precomp.h"
 #include "EditorLayer.h"
+
+#include "Capybara/ImGui/ImGuizmo.h"
 
 namespace Capybara {
 
@@ -17,7 +18,7 @@ namespace Capybara {
 	}
 
 	EditorLayer::EditorLayer()
-		: m_Scene(Scene::Model), m_Camera(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.1f, 10000.0f))
+		: m_SceneType(SceneType::Model)
 	{
 	}
 
@@ -27,96 +28,126 @@ namespace Capybara {
 
 	void EditorLayer::OnAttach()
 	{
+		// ImGui Colors
+		ImVec4* colors = ImGui::GetStyle().Colors;
+		colors[ImGuiCol_Text] = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+		colors[ImGuiCol_TextDisabled] = ImVec4(0.5f, 0.5f, 0.5f, 1.0f);
+		colors[ImGuiCol_WindowBg] = ImVec4(0.18f, 0.18f, 0.18f, 1.0f); // Window background
+		colors[ImGuiCol_ChildBg] = ImVec4(1.0f, 1.0f, 1.0f, 0.0f);
+		colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);
+		colors[ImGuiCol_Border] = ImVec4(0.43f, 0.43f, 0.50f, 0.5f);
+		colors[ImGuiCol_BorderShadow] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+		colors[ImGuiCol_FrameBg] = ImVec4(0.3f, 0.3f, 0.3f, 0.5f); // Widget backgrounds
+		colors[ImGuiCol_FrameBgHovered] = ImVec4(0.4f, 0.4f, 0.4f, 0.4f);
+		colors[ImGuiCol_FrameBgActive] = ImVec4(0.4f, 0.4f, 0.4f, 0.6f);
+		colors[ImGuiCol_TitleBg] = ImVec4(0.04f, 0.04f, 0.04f, 1.0f);
+		colors[ImGuiCol_TitleBgActive] = ImVec4(0.29f, 0.29f, 0.29f, 1.0f);
+		colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.0f, 0.0f, 0.0f, 0.51f);
+		colors[ImGuiCol_MenuBarBg] = ImVec4(0.14f, 0.14f, 0.14f, 1.0f);
+		colors[ImGuiCol_ScrollbarBg] = ImVec4(0.02f, 0.02f, 0.02f, 0.53f);
+		colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.31f, 0.31f, 0.31f, 1.0f);
+		colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.41f, 0.41f, 0.41f, 1.0f);
+		colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.51f, 0.51f, 0.51f, 1.0f);
+		colors[ImGuiCol_CheckMark] = ImVec4(0.94f, 0.94f, 0.94f, 1.0f);
+		colors[ImGuiCol_SliderGrab] = ImVec4(0.51f, 0.51f, 0.51f, 0.7f);
+		colors[ImGuiCol_SliderGrabActive] = ImVec4(0.66f, 0.66f, 0.66f, 1.0f);
+		colors[ImGuiCol_Button] = ImVec4(0.44f, 0.44f, 0.44f, 0.4f);
+		colors[ImGuiCol_ButtonHovered] = ImVec4(0.46f, 0.47f, 0.48f, 1.0f);
+		colors[ImGuiCol_ButtonActive] = ImVec4(0.42f, 0.42f, 0.42f, 1.0f);
+		colors[ImGuiCol_Header] = ImVec4(0.7f, 0.7f, 0.7f, 0.31f);
+		colors[ImGuiCol_HeaderHovered] = ImVec4(0.7f, 0.7f, 0.7f, 0.8f);
+		colors[ImGuiCol_HeaderActive] = ImVec4(0.48f, 0.5f, 0.52f, 1.0f);
+		colors[ImGuiCol_Separator] = ImVec4(0.43f, 0.43f, 0.5f, 0.5f);
+		colors[ImGuiCol_SeparatorHovered] = ImVec4(0.72f, 0.72f, 0.72f, 0.78f);
+		colors[ImGuiCol_SeparatorActive] = ImVec4(0.51f, 0.51f, 0.51f, 1.0f);
+		colors[ImGuiCol_ResizeGrip] = ImVec4(0.91f, 0.91f, 0.91f, 0.25f);
+		colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.81f, 0.81f, 0.81f, 0.67f);
+		colors[ImGuiCol_ResizeGripActive] = ImVec4(0.46f, 0.46f, 0.46f, 0.95f);
+		colors[ImGuiCol_PlotLines] = ImVec4(0.61f, 0.61f, 0.61f, 1.0f);
+		colors[ImGuiCol_PlotLinesHovered] = ImVec4(1.0f, 0.43f, 0.35f, 1.0f);
+		colors[ImGuiCol_PlotHistogram] = ImVec4(0.73f, 0.6f, 0.15f, 1.0f);
+		colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.0f, 0.6f, 0.0f, 1.0f);
+		colors[ImGuiCol_TextSelectedBg] = ImVec4(0.87f, 0.87f, 0.87f, 0.35f);
+		// colors[ImGuiCol_ModalWindowDarkening] = ImVec4(0.8f, 0.8f, 0.8f, 0.35f);
+		colors[ImGuiCol_DragDropTarget] = ImVec4(1.0f, 1.0f, 0.0f, 0.9f);
+		colors[ImGuiCol_NavHighlight] = ImVec4(0.60f, 0.6f, 0.6f, 1.0f);
+		colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.0f, 1.0f, 1.0f, 0.7f);
+
 		using namespace glm;
 
-		m_Mesh.reset(new Mesh("assets/models/m1911/m1911.fbx"));
-		m_MeshMaterial.reset(new MaterialInstance(m_Mesh->GetMaterial()));
+		auto environment = Environment::Load("assets/env/birchwood_4k.hdr");
 
-		m_QuadShader = Shader::Create("assets/shaders/quad.glsl");
-		m_HDRShader = Shader::Create("assets/shaders/hdr.glsl");
+		// Model Scene
+		{
+			m_Scene = CreateRef<Scene>("Model Scene");
+			m_Scene->SetCamera(Camera(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.1f, 10000.0f)));
 
-		m_SphereMesh.reset(new Mesh("assets/models/Sphere1m.fbx"));
+			m_Scene->SetEnvironment(environment);
+
+			m_MeshEntity = m_Scene->CreateEntity();
+
+			auto mesh = CreateRef<Mesh>("assets/models/m1911/m1911.fbx");
+			//auto mesh = CreateRef<Mesh>("assets/meshes/cerberus/CerberusMaterials.fbx");
+			// auto mesh = CreateRef<Mesh>("assets/models/m1911/M1911Materials.fbx");
+			m_MeshEntity->SetMesh(mesh);
+
+			m_MeshMaterial = mesh->GetMaterial();
+		}
+
+		// Sphere Scene
+		{
+			m_SphereScene = CreateRef<Scene>("PBR Sphere Scene");
+			m_SphereScene->SetCamera(Camera(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.1f, 10000.0f)));
+
+			m_SphereScene->SetEnvironment(environment);
+
+			auto sphereMesh = CreateRef<Mesh>("assets/models/Sphere1m.fbx");
+			m_SphereBaseMaterial = sphereMesh->GetMaterial();
+
+			float x = -4.0f;
+			float roughness = 0.0f;
+			for (int i = 0; i < 8; i++)
+			{
+				auto sphereEntity = m_SphereScene->CreateEntity();
+
+				Ref<MaterialInstance> mi = CreateRef<MaterialInstance>(m_SphereBaseMaterial);
+				mi->Set("u_Metalness", 1.0f);
+				mi->Set("u_Roughness", roughness);
+				x += 1.1f;
+				roughness += 0.15f;
+				m_MetalSphereMaterialInstances.push_back(mi);
+
+				sphereEntity->SetMesh(sphereMesh);
+				sphereEntity->SetMaterial(mi);
+				sphereEntity->Transform() = translate(mat4(1.0f), vec3(x, 0.0f, 0.0f));
+			}
+
+			x = -4.0f;
+			roughness = 0.0f;
+			for (int i = 0; i < 8; i++)
+			{
+				auto sphereEntity = m_SphereScene->CreateEntity();
+
+				Ref<MaterialInstance> mi(new MaterialInstance(m_SphereBaseMaterial));
+				mi->Set("u_Metalness", 0.0f);
+				mi->Set("u_Roughness", roughness);
+				x += 1.1f;
+				roughness += 0.15f;
+				m_DielectricSphereMaterialInstances.push_back(mi);
+
+				sphereEntity->SetMesh(sphereMesh);
+				sphereEntity->SetMaterial(mi);
+				sphereEntity->Transform() = translate(mat4(1.0f), vec3(x, 1.2f, 0.0f));
+			}
+		}
+
+		m_ActiveScene = m_Scene;
+		m_SceneHierarchyPanel = CreateScope<SceneHierarchyPanel>(m_ActiveScene);
+
 		m_PlaneMesh.reset(new Mesh("assets/models/Plane1m.obj"));
 
-		m_GridShader = Shader::Create("assets/shaders/Grid.glsl");
-		m_GridMaterial = MaterialInstance::Create(Material::Create(m_GridShader));
-		m_GridMaterial->Set("u_Scale", m_GridScale);
-		m_GridMaterial->Set("u_Res", m_GridSize);
-
 		// Editor
-		m_CheckerboardTex.reset(Texture2D::Create("assets/editor/Checkerboard.tga"));
-
-		// Environment
-		m_EnvironmentCubeMap.reset(TextureCube::Create("assets/textures/environments/Arches_E_PineTree_Radiance.tga"));
-		//m_EnvironmentCubeMap.reset(TextureCube::Create("assets/textures/environments/DebugCubeMap.tga"));
-		m_EnvironmentIrradiance.reset(TextureCube::Create("assets/textures/environments/Arches_E_PineTree_Irradiance.tga"));
-		m_BRDFLUT.reset(Texture2D::Create("assets/textures/BRDF_LUT.tga"));
-
-		m_FrameBuffer.reset(FrameBuffer::Create(1280, 720, FrameBufferFormat::RGBA16F));
-		m_FinalPresentBuffer.reset(FrameBuffer::Create(1280, 720, FrameBufferFormat::RGBA8));
-
-		float x = -4.0f;
-		float roughness = 0.0f;
-		for (int i = 0; i < 8; i++)
-		{
-			Ref<MaterialInstance> mi(new MaterialInstance(m_SphereMesh->GetMaterial()));
-			mi->Set("u_Metalness", 1.0f);
-			mi->Set("u_Roughness", roughness);
-			mi->Set("u_ModelMatrix", translate(mat4(1.0f), vec3(x, 0.0f, 0.0f)));
-			x += 1.1f;
-			roughness += 0.15f;
-			m_MetalSphereMaterialInstances.push_back(mi);
-		}
-
-		x = -4.0f;
-		roughness = 0.0f;
-		for (int i = 0; i < 8; i++)
-		{
-			Ref<MaterialInstance> mi(new MaterialInstance(m_SphereMesh->GetMaterial()));
-			mi->Set("u_Metalness", 0.0f);
-			mi->Set("u_Roughness", roughness);
-			mi->Set("u_ModelMatrix", translate(mat4(1.0f), vec3(x, 1.2f, 0.0f)));
-			x += 1.1f;
-			roughness += 0.15f;
-			m_DielectricSphereMaterialInstances.push_back(mi);
-		}
-
-		// Create fullscreen quad for final composite
-		x = -1;
-		float y = -1;
-		float width = 2, height = 2;
-		struct QuadVertex
-		{
-			glm::vec3 Position;
-			glm::vec2 TexCoord;
-		};
-
-		QuadVertex* data = new QuadVertex[4];
-
-		data[0].Position = glm::vec3(x, y, 0);
-		data[0].TexCoord = glm::vec2(0, 0);
-
-		data[1].Position = glm::vec3(x + width, y, 0);
-		data[1].TexCoord = glm::vec2(1, 0);
-
-		data[2].Position = glm::vec3(x + width, y + height, 0);
-		data[2].TexCoord = glm::vec2(1, 1);
-
-		data[3].Position = glm::vec3(x, y + height, 0);
-		data[3].TexCoord = glm::vec2(0, 1);
-
-		m_FullscreenQuadVertexArray = VertexArray::Create();
-		auto quadVB = VertexBuffer::Create(data, 4 * sizeof(QuadVertex));
-		quadVB->SetLayout({
-			{ ShaderDataType::Float3, "a_Position" },
-			{ ShaderDataType::Float2, "a_TexCoord" }
-		});
-
-		uint32_t indices[6] = { 0, 1, 2, 2, 3, 0, };
-		auto quadIB = IndexBuffer::Create(indices, 6 * sizeof(uint32_t));
-
-		m_FullscreenQuadVertexArray->AddVertexBuffer(quadVB);
-		m_FullscreenQuadVertexArray->SetIndexBuffer(quadIB);
+		m_CheckerboardTex = Texture2D::Create("assets/editor/Checkerboard.tga");
 
 		// Set lights
 		m_Light.Direction = { -0.5f, -0.5f, 1.0f };
@@ -131,60 +162,28 @@ namespace Capybara {
 	{
 		// THINGS TO LOOK AT:
 		// - BRDF LUT
-		// - Cubemap mips and filtering
 		// - Tonemapping and proper HDR pipeline
 		using namespace Capybara;
 		using namespace glm;
 
-		m_Camera.Update(ts);
-		auto viewProjection = m_Camera.GetProjectionMatrix() * m_Camera.GetViewMatrix();
-
-		m_FrameBuffer->Bind();
-		Renderer::Clear();
-		// TODO:
-		// Renderer::BeginScene(m_Camera);
-		// Renderer::EndScene();
-
-		m_QuadShader->Bind();
-		m_QuadShader->SetMat4("u_InverseVP", inverse(viewProjection));
-		m_EnvironmentIrradiance->Bind(0);
-		m_FullscreenQuadVertexArray->Bind();
-		Renderer::DrawIndexed(m_FullscreenQuadVertexArray->GetIndexBuffer()->GetCount(), false);
-
 		m_MeshMaterial->Set("u_AlbedoColor", m_AlbedoInput.Color);
 		m_MeshMaterial->Set("u_Metalness", m_MetalnessInput.Value);
 		m_MeshMaterial->Set("u_Roughness", m_RoughnessInput.Value);
-		m_MeshMaterial->Set("u_ViewProjectionMatrix", viewProjection);
-		m_MeshMaterial->Set("u_ModelMatrix", scale(mat4(1.0f), vec3(m_MeshScale)));
 		m_MeshMaterial->Set("lights", m_Light);
-		m_MeshMaterial->Set("u_CameraPosition", m_Camera.GetPosition());
-		m_MeshMaterial->Set("u_RadiancePrefilter", m_RadiancePrefilter ? 1.0f : 0.0f);
 		m_MeshMaterial->Set("u_AlbedoTexToggle", m_AlbedoInput.UseTexture ? 1.0f : 0.0f);
 		m_MeshMaterial->Set("u_NormalTexToggle", m_NormalInput.UseTexture ? 1.0f : 0.0f);
 		m_MeshMaterial->Set("u_MetalnessTexToggle", m_MetalnessInput.UseTexture ? 1.0f : 0.0f);
 		m_MeshMaterial->Set("u_RoughnessTexToggle", m_RoughnessInput.UseTexture ? 1.0f : 0.0f);
 		m_MeshMaterial->Set("u_EnvMapRotation", m_EnvMapRotation);
 
-		m_MeshMaterial->Set("u_EnvRadianceTex", m_EnvironmentCubeMap);
-		m_MeshMaterial->Set("u_EnvIrradianceTex", m_EnvironmentIrradiance);
-		m_MeshMaterial->Set("u_BRDFLUTTexture", m_BRDFLUT);
-
-		m_SphereMesh->GetMaterial()->Set("u_AlbedoColor", m_AlbedoInput.Color);
-		m_SphereMesh->GetMaterial()->Set("u_Metalness", m_MetalnessInput.Value);
-		m_SphereMesh->GetMaterial()->Set("u_Roughness", m_RoughnessInput.Value);
-		m_SphereMesh->GetMaterial()->Set("u_ViewProjectionMatrix", viewProjection);
-		m_SphereMesh->GetMaterial()->Set("u_ModelMatrix", scale(mat4(1.0f), vec3(m_MeshScale)));
-		m_SphereMesh->GetMaterial()->Set("lights", m_Light);
-		m_SphereMesh->GetMaterial()->Set("u_CameraPosition", m_Camera.GetPosition());
-		m_SphereMesh->GetMaterial()->Set("u_RadiancePrefilter", m_RadiancePrefilter ? 1.0f : 0.0f);
-		m_SphereMesh->GetMaterial()->Set("u_AlbedoTexToggle", m_AlbedoInput.UseTexture ? 1.0f : 0.0f);
-		m_SphereMesh->GetMaterial()->Set("u_NormalTexToggle", m_NormalInput.UseTexture ? 1.0f : 0.0f);
-		m_SphereMesh->GetMaterial()->Set("u_MetalnessTexToggle", m_MetalnessInput.UseTexture ? 1.0f : 0.0f);
-		m_SphereMesh->GetMaterial()->Set("u_RoughnessTexToggle", m_RoughnessInput.UseTexture ? 1.0f : 0.0f);
-		m_SphereMesh->GetMaterial()->Set("u_EnvMapRotation", m_EnvMapRotation);
-		m_SphereMesh->GetMaterial()->Set("u_EnvRadianceTex", m_EnvironmentCubeMap);
-		m_SphereMesh->GetMaterial()->Set("u_EnvIrradianceTex", m_EnvironmentIrradiance);
-		m_SphereMesh->GetMaterial()->Set("u_BRDFLUTTexture", m_BRDFLUT);
+		m_SphereBaseMaterial->Set("u_AlbedoColor", m_AlbedoInput.Color);
+		m_SphereBaseMaterial->Set("lights", m_Light);
+		m_SphereBaseMaterial->Set("u_RadiancePrefilter", m_RadiancePrefilter ? 1.0f : 0.0f);
+		m_SphereBaseMaterial->Set("u_AlbedoTexToggle", m_AlbedoInput.UseTexture ? 1.0f : 0.0f);
+		m_SphereBaseMaterial->Set("u_NormalTexToggle", m_NormalInput.UseTexture ? 1.0f : 0.0f);
+		m_SphereBaseMaterial->Set("u_MetalnessTexToggle", m_MetalnessInput.UseTexture ? 1.0f : 0.0f);
+		m_SphereBaseMaterial->Set("u_RoughnessTexToggle", m_RoughnessInput.UseTexture ? 1.0f : 0.0f);
+		m_SphereBaseMaterial->Set("u_EnvMapRotation", m_EnvMapRotation);
 
 		if (m_AlbedoInput.TextureMap)
 			m_MeshMaterial->Set("u_AlbedoTexture", m_AlbedoInput.TextureMap);
@@ -195,34 +194,10 @@ namespace Capybara {
 		if (m_RoughnessInput.TextureMap)
 			m_MeshMaterial->Set("u_RoughnessTexture", m_RoughnessInput.TextureMap);
 
-		if (m_Scene == Scene::Spheres)
-		{
-			// Metals
-			for (int i = 0; i < 8; i++)
-				m_SphereMesh->Render(ts, glm::mat4(1.0f), m_MetalSphereMaterialInstances[i]);
+		m_ActiveScene->OnUpdate(ts);
 
-			// Dielectrics
-			for (int i = 0; i < 8; i++)
-				m_SphereMesh->Render(ts, glm::mat4(1.0f), m_DielectricSphereMaterialInstances[i]);
-		}
-		else if (m_Scene == Scene::Model)
-		{
-			if (m_Mesh)
-				m_Mesh->Render(ts, scale(mat4(1.0f), vec3(m_MeshScale)), m_MeshMaterial);
-		}
-
-		m_GridMaterial->Set("u_MVP", viewProjection * glm::scale(glm::mat4(1.0f), glm::vec3(16.0f)));
-		m_PlaneMesh->Render(ts, m_GridMaterial);
-
-		m_FrameBuffer->UnBind();
-
-		m_FinalPresentBuffer->Bind();
-		m_HDRShader->Bind();
-		m_HDRShader->SetFloat("u_Exposure", m_Exposure);
-		m_FrameBuffer->BindTexture();
-		m_FullscreenQuadVertexArray->Bind();
-		Renderer::DrawIndexed(m_FullscreenQuadVertexArray->GetIndexBuffer()->GetCount(), false);
-		m_FinalPresentBuffer->UnBind();
+		/*m_GridMaterial->Set("u_ViewProjection", viewProjection);
+		Renderer::SubmitMesh(m_PlaneMesh, glm::scale(glm::mat4(1.0f), glm::vec3(16.0f)), m_GridMaterial);*/
 	}
 
 	void EditorLayer::Property(const std::string& name, bool& value)
@@ -246,6 +221,24 @@ namespace Capybara {
 
 		std::string id = "##" + name;
 		ImGui::SliderFloat(id.c_str(), &value, min, max);
+
+		ImGui::PopItemWidth();
+		ImGui::NextColumn();
+	}
+
+	void EditorLayer::Property(const std::string& name, glm::vec2& value, EditorLayer::PropertyFlag flags)
+	{
+		Property(name, value, -1.0f, 1.0f, flags);
+	}
+
+	void EditorLayer::Property(const std::string& name, glm::vec2& value, float min, float max, EditorLayer::PropertyFlag flags)
+	{
+		ImGui::Text(name.c_str());
+		ImGui::NextColumn();
+		ImGui::PushItemWidth(-1);
+
+		std::string id = "##" + name;
+		ImGui::SliderFloat2(id.c_str(), glm::value_ptr(value), min, max);
 
 		ImGui::PopItemWidth();
 		ImGui::NextColumn();
@@ -316,9 +309,9 @@ namespace Capybara {
 			window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 		}
 
-		// When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background and handle the pass-thru hole, so we ask Begin() to not render a background.
-		if (opt_flags & ImGuiDockNodeFlags_PassthruCentralNode)
-			window_flags |= ImGuiWindowFlags_NoBackground;
+		// When using ImGuiDockNodeFlags_PassthruDockspace, DockSpace() will render our background and handle the pass-thru hole, so we ask Begin() to not render a background.
+		//if (opt_flags & ImGuiDockNodeFlags_PassthruDockspace)
+		//	window_flags |= ImGuiWindowFlags_NoBackground;
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		ImGui::Begin("DockSpace Demo", &p_open, window_flags);
@@ -337,11 +330,22 @@ namespace Capybara {
 
 		// Editor Panel ------------------------------------------------------------------------------
 		ImGui::Begin("Model");
-		ImGui::RadioButton("Spheres", (int*)& m_Scene, (int)Scene::Spheres);
+		if (ImGui::RadioButton("Spheres", (int*)&m_SceneType, (int)SceneType::Spheres))
+			m_ActiveScene = m_SphereScene;
 		ImGui::SameLine();
-		ImGui::RadioButton("Model", (int*)& m_Scene, (int)Scene::Model);
+		if (ImGui::RadioButton("Model", (int*)&m_SceneType, (int)SceneType::Model))
+			m_ActiveScene = m_Scene;
 
 		ImGui::Begin("Environment");
+
+		if (ImGui::Button("Load Environment Map"))
+		{
+			std::string filename = Application::Get().OpenFile("*.hdr");
+			if (filename != "")
+				m_ActiveScene->SetEnvironment(Environment::Load(filename));
+		}
+
+		ImGui::SliderFloat("Skybox LOD", &m_Scene->GetSkyboxLod(), 0.0f, 11.0f);
 
 		ImGui::Columns(2);
 		ImGui::AlignTextToFramePadding();
@@ -349,9 +353,7 @@ namespace Capybara {
 		Property("Light Direction", m_Light.Direction);
 		Property("Light Radiance", m_Light.Radiance, PropertyFlag::ColorProperty);
 		Property("Light Multiplier", m_LightMultiplier, 0.0f, 5.0f);
-		Property("Exposure", m_Exposure, 0.0f, 5.0f);
-
-		Property("Mesh Scale", m_MeshScale, 0.0f, 2.0f);
+		Property("Exposure", m_ActiveScene->GetCamera().GetExposure(), 0.0f, 5.0f);
 
 		Property("Radiance Prefiltering", m_RadiancePrefilter);
 		Property("Env Map Rotation", m_EnvMapRotation, -360.0f, 360.0f);
@@ -363,7 +365,8 @@ namespace Capybara {
 		ImGui::Separator();
 		{
 			ImGui::Text("Mesh");
-			std::string fullpath = m_Mesh ? m_Mesh->GetFilePath() : "None";
+			auto mesh = m_MeshEntity->GetMesh();
+			std::string fullpath = mesh ? mesh->GetFilePath() : "None";
 			size_t found = fullpath.find_last_of("/\\");
 			std::string path = found != std::string::npos ? fullpath.substr(found + 1) : fullpath;
 			ImGui::Text(path.c_str()); ImGui::SameLine();
@@ -372,8 +375,10 @@ namespace Capybara {
 				std::string filename = Application::Get().OpenFile("");
 				if (filename != "")
 				{
-					m_Mesh.reset(new Mesh(filename));
-					m_MeshMaterial.reset(new MaterialInstance(m_Mesh->GetMaterial()));
+					auto newMesh = CreateRef<Mesh>(filename);
+					// m_MeshMaterial.reset(new MaterialInstance(newMesh->GetMaterial()));
+					// m_MeshEntity->SetMaterial(m_MeshMaterial);
+					m_MeshEntity->SetMesh(newMesh);
 				}
 			}
 		}
@@ -402,7 +407,7 @@ namespace Capybara {
 					{
 						std::string filename = Application::Get().OpenFile("");
 						if (filename != "")
-							m_AlbedoInput.TextureMap.reset(Texture2D::Create(filename, m_AlbedoInput.SRGB));
+							m_AlbedoInput.TextureMap = Texture2D::Create(filename, m_AlbedoInput.SRGB);
 					}
 				}
 				ImGui::SameLine();
@@ -411,7 +416,7 @@ namespace Capybara {
 				if (ImGui::Checkbox("sRGB##AlbedoMap", &m_AlbedoInput.SRGB))
 				{
 					if (m_AlbedoInput.TextureMap)
-						m_AlbedoInput.TextureMap.reset(Texture2D::Create(m_AlbedoInput.TextureMap->GetPath(), m_AlbedoInput.SRGB));
+						m_AlbedoInput.TextureMap = Texture2D::Create(m_AlbedoInput.TextureMap->GetPath(), m_AlbedoInput.SRGB);
 				}
 				ImGui::EndGroup();
 				ImGui::SameLine();
@@ -440,7 +445,7 @@ namespace Capybara {
 					{
 						std::string filename = Application::Get().OpenFile("");
 						if (filename != "")
-							m_NormalInput.TextureMap.reset(Texture2D::Create(filename));
+							m_NormalInput.TextureMap = Texture2D::Create(filename);
 					}
 				}
 				ImGui::SameLine();
@@ -469,7 +474,7 @@ namespace Capybara {
 					{
 						std::string filename = Application::Get().OpenFile("");
 						if (filename != "")
-							m_MetalnessInput.TextureMap.reset(Texture2D::Create(filename));
+							m_MetalnessInput.TextureMap = Texture2D::Create(filename);
 					}
 				}
 				ImGui::SameLine();
@@ -500,7 +505,7 @@ namespace Capybara {
 					{
 						std::string filename = Application::Get().OpenFile("");
 						if (filename != "")
-							m_RoughnessInput.TextureMap.reset(Texture2D::Create(filename));
+							m_RoughnessInput.TextureMap = Texture2D::Create(filename);
 					}
 				}
 				ImGui::SameLine();
@@ -543,11 +548,23 @@ namespace Capybara {
 		CPBR_INFO("{0}, {1}", posX, posY);*/
 
 		auto viewportSize = ImGui::GetContentRegionAvail();
-		m_FrameBuffer->Resize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
-		m_FinalPresentBuffer->Resize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
-		m_Camera.SetProjectionMatrix(glm::perspectiveFov(glm::radians(45.0f), viewportSize.x, viewportSize.y, 0.1f, 10000.0f));
-		m_Camera.SetViewportSize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
-		ImGui::Image((void*)m_FinalPresentBuffer->GetColorAttachmentRendererID(), viewportSize, { 0, 1 }, { 1, 0 });
+		
+		SceneRenderer::SetViewportSize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
+		m_ActiveScene->GetCamera().SetProjectionMatrix(glm::perspectiveFov(glm::radians(45.0f), viewportSize.x, viewportSize.y, 0.1f, 10000.0f));
+		m_ActiveScene->GetCamera().SetViewportSize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
+		ImGui::Image((void*)SceneRenderer::GetFinalColorBufferRendererID(), viewportSize, { 0, 1 }, { 1, 0 });
+
+		// Gizmos
+		if (m_GizmoType != -1)
+		{
+			float rw = (float)ImGui::GetWindowWidth();
+			float rh = (float)ImGui::GetWindowHeight();
+			ImGuizmo::SetOrthographic(false);
+			ImGuizmo::SetDrawlist();
+			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, rw, rh);
+			ImGuizmo::Manipulate(glm::value_ptr(m_ActiveScene->GetCamera().GetViewMatrix()), glm::value_ptr(m_ActiveScene->GetCamera().GetProjectionMatrix()), (ImGuizmo::OPERATION)m_GizmoType, ImGuizmo::LOCAL, glm::value_ptr(m_MeshEntity->Transform()));
+		}
+
 		ImGui::End();
 		ImGui::PopStyleVar();
 
@@ -562,7 +579,7 @@ namespace Capybara {
 				if (ImGui::MenuItem("Flag: NoSplit", "", (opt_flags & ImGuiDockNodeFlags_NoSplit) != 0))                 opt_flags ^= ImGuiDockNodeFlags_NoSplit;
 				if (ImGui::MenuItem("Flag: NoDockingInCentralNode", "", (opt_flags & ImGuiDockNodeFlags_NoDockingInCentralNode) != 0))  opt_flags ^= ImGuiDockNodeFlags_NoDockingInCentralNode;
 				if (ImGui::MenuItem("Flag: NoResize", "", (opt_flags & ImGuiDockNodeFlags_NoResize) != 0))                opt_flags ^= ImGuiDockNodeFlags_NoResize;
-				if (ImGui::MenuItem("Flag: PassthruDockspace", "", (opt_flags & ImGuiDockNodeFlags_PassthruCentralNode) != 0))       opt_flags ^= ImGuiDockNodeFlags_PassthruCentralNode;
+				//if (ImGui::MenuItem("Flag: PassthruDockspace", "", (opt_flags & ImGuiDockNodeFlags_PassthruDockspace) != 0))       opt_flags ^= ImGuiDockNodeFlags_PassthruDockspace;
 				if (ImGui::MenuItem("Flag: AutoHideTabBar", "", (opt_flags & ImGuiDockNodeFlags_AutoHideTabBar) != 0))          opt_flags ^= ImGuiDockNodeFlags_AutoHideTabBar;
 				ImGui::Separator();
 				if (ImGui::MenuItem("Close DockSpace", NULL, false, p_open != NULL))
@@ -580,18 +597,36 @@ namespace Capybara {
 			ImGui::EndMenuBar();
 		}
 
+		m_SceneHierarchyPanel->OnImGuiRender();
+
 		ImGui::End();
-
-		if (m_Mesh)
-			m_Mesh->OnImGuiRender();
-
-		// static bool o = true;
-		// ImGui::ShowDemoWindow(&o);
 	}
 
 	void EditorLayer::OnEvent(Event& event)
 	{
+		EventDispatcher dispatcher(event);
+		dispatcher.Dispatch<KeyPressedEvent>(CPBR_BIND_EVENT_FN(EditorLayer::OnKeyPressedEvent));
 	}
 
+
+	bool EditorLayer::OnKeyPressedEvent(KeyPressedEvent& e)
+	{
+		switch (e.GetKeyCode())
+		{
+			case CPBR_KEY_Q:
+				m_GizmoType = -1;
+				break;
+			case CPBR_KEY_W:
+				m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
+				break;
+			case CPBR_KEY_E:
+				m_GizmoType = ImGuizmo::OPERATION::ROTATE;
+				break;
+			case CPBR_KEY_R:
+				m_GizmoType = ImGuizmo::OPERATION::SCALE;
+				break;
+		}
+		return false;
+	}
 
 }
