@@ -19,13 +19,14 @@ namespace Capybara {
         delete[] m_CommandBuffer;
     }
 
+    // 先是函数指针(8 bytes), 然后是函数体将会用到的大小(8 bytes), 函数体的大小(size)
     void* RenderCommandQueue::Allocate(RenderCommandFn fn, unsigned int size)
     {
         // TODO: alignment
-        *(RenderCommandFn*)m_CommandBufferPtr = fn;
+        *reinterpret_cast<RenderCommandFn*>(m_CommandBufferPtr) = fn;
         m_CommandBufferPtr += sizeof(RenderCommandFn);
 
-        *(uint32_t*)m_CommandBufferPtr = size;
+        *reinterpret_cast<uint32_t*>(m_CommandBufferPtr) = size;
         m_CommandBufferPtr += sizeof(unsigned int);
 
         void* memory = m_CommandBufferPtr;
@@ -43,10 +44,10 @@ namespace Capybara {
 
         for (unsigned int i = 0; i < m_CommandCount; i++)
         {
-            RenderCommandFn function = *(RenderCommandFn*)buffer;
+            RenderCommandFn function = *reinterpret_cast<RenderCommandFn*>(buffer);
             buffer += sizeof(RenderCommandFn);
 
-            unsigned int size = *(unsigned int*)buffer;
+            unsigned int size = *reinterpret_cast<unsigned int*>(buffer);
             buffer += sizeof(unsigned int);
             function(buffer);
             buffer += size;

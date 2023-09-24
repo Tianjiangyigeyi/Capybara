@@ -9,17 +9,17 @@ namespace Capybara {
 
 	Ref<Material> Material::Create(const Ref<Shader>& shader)
 	{
-		return std::make_shared<Material>(shader);
+		return CreateRef<Material>(shader);
 	}
 
 	Material::Material(const Ref<Shader>& shader)
-		: m_Shader(shader)
+		: m_Shader(shader), m_MaterialFlags(0)
 	{
-		m_Shader->AddShaderReloadedCallback(std::bind(&Material::OnShaderReloaded, this));
+		m_Shader->AddShaderReloadedCallback([this] { OnShaderReloaded(); });
 		AllocateStorage();
 
-		m_MaterialFlags |= (uint32_t)MaterialFlag::DepthTest;
-		m_MaterialFlags |= (uint32_t)MaterialFlag::Blend;
+		m_MaterialFlags |= static_cast<uint32_t>(MaterialFlag::DepthTest);
+		m_MaterialFlags |= static_cast<uint32_t>(MaterialFlag::Blend);
 	}
 
 	Material::~Material()
@@ -127,7 +127,7 @@ namespace Capybara {
 
 	Ref<MaterialInstance> MaterialInstance::Create(const Ref<Material>& material)
 	{
-		return std::make_shared<MaterialInstance>(material);
+		return CreateRef<MaterialInstance>(material);
 	}
 
 	MaterialInstance::MaterialInstance(const Ref<Material>& material)

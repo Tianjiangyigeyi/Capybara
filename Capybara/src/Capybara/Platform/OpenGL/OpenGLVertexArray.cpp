@@ -31,7 +31,7 @@ namespace Capybara {
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
 		Renderer::Submit([this]() {
-			glCreateVertexArrays(1, &m_RendererID);
+			glGenVertexArrays(1, &m_RendererID);
 		});
 	}
 
@@ -56,7 +56,7 @@ namespace Capybara {
 		});
 	}
 
-	void OpenGLVertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer)
+	void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer)
 	{
 		CPBR_CORE_ASSERT(vertexBuffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout!");
 
@@ -92,7 +92,7 @@ namespace Capybara {
 		m_VertexBuffers.push_back(vertexBuffer);
 	}
 
-	void OpenGLVertexArray::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer)
+	void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer)
 	{
 		Bind();
 		indexBuffer->Bind();

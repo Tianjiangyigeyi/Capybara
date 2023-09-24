@@ -31,7 +31,7 @@ namespace Capybara {
 
 	Ref<OpenGLShader> OpenGLShader::CreateFromString(const std::string& source)
 	{
-		Ref<OpenGLShader> shader = std::make_shared<OpenGLShader>();
+		Ref<OpenGLShader> shader = CreateRef<OpenGLShader>();
 		shader->Load(source);
 		return shader;
 	}

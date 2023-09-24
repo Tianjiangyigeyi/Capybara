@@ -13,6 +13,7 @@ int main(int argc, char** argv)
     app->Run();
     delete app;
     Capybara::ShutdownCore();
+    return 0;
 }
 
 #endif

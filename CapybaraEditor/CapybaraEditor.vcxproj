@@ -148,6 +148,17 @@
       <Project>{48CAC589-3497-2095-5DB0-0E3D49DC5523}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="assets\shaders\CapybaraPBR_Anim.glsl" />
+    <Content Include="assets\shaders\CapybaraPBR_Static.glsl" />
+    <Content Include="assets\shaders\EnvironmentIrradiance.glsl" />
+    <Content Include="assets\shaders\EnvironmentMipFilter.glsl" />
+    <Content Include="assets\shaders\EquirectangularToCubeMap.glsl" />
+    <Content Include="assets\shaders\Grid.glsl" />
+    <Content Include="assets\shaders\hdr.glsl" />
+    <Content Include="assets\shaders\shader.glsl" />
+    <Content Include="assets\shaders\Skybox.glsl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

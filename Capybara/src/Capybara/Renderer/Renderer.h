@@ -29,9 +29,17 @@ namespace Capybara {
 
 		static const Scope<ShaderLibrary>& GetShaderLibrary();
 
+		/*
+		 * 各种与渲染有关的函数func都可以通过该函数发送给渲染队列去执行, 这些函数的类型可以是不同的, 但一般都是返回void, 因为非
+		 * void的返回值浪费了
+		 * 通过一个lambda函数赋值给一个指针, 将这个指针renderCmd传给RenderCommandQueue, 并且传入func的size, 这是因为在
+		 * RenderCommandQueue的Allocate的实现里需要提前分配好这块函数的内存, 方便渲染队列执行这些函数的时候能用到(每一次tick
+		 * 都会调用Render::WaitAndRender将当前渲染队列里的所有函数执行掉, 这是通过RenderCommandQueue里面的计数器实现的)
+		 */
 		template<typename FuncT>
 		static void Submit(FuncT&& func)
 		{
+			// renderCmd是一个指针
 			auto renderCmd = [](void* ptr) {
 				auto pFunc = (FuncT*)ptr;
 				(*pFunc)();

@@ -23,7 +23,8 @@ namespace Capybara {
 	
 	void Renderer::Init()
 	{
-		s_Data.m_ShaderLibrary = std::make_unique<ShaderLibrary>();
+		// s_Data.m_ShaderLibrary = std::make_unique<ShaderLibrary>();
+		s_Data.m_ShaderLibrary = CreateScope<ShaderLibrary>();
 		Renderer::Submit([](){ RendererAPI::Init(); });
 
 		Renderer::GetShaderLibrary()->Load("assets/shaders/CapybaraPBR_Static.glsl");

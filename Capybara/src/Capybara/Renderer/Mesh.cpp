@@ -68,7 +68,7 @@ namespace Capybara {
 
 		CPBR_CORE_INFO("Loading mesh: {0}", filename.c_str());
 		
-		m_Importer = std::make_unique<Assimp::Importer>();
+		m_Importer = CreateScope<Assimp::Importer>();
 
 		const aiScene* scene = m_Importer->ReadFile(filename, s_MeshImportFlags);
 		if (!scene || !scene->HasMeshes())

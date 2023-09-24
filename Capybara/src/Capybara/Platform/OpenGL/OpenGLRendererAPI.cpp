@@ -33,9 +33,9 @@ namespace Capybara {
 		glEnable(GL_DEBUG_OUTPUT);
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 
-		unsigned int vao;
-		glGenVertexArrays(1, &vao);
-		glBindVertexArray(vao);
+		// unsigned int vao;
+		// glGenVertexArrays(1, &vao);
+		// glBindVertexArray(vao);
 
 		glEnable(GL_DEPTH_TEST);
 		//glEnable(GL_CULL_FACE);

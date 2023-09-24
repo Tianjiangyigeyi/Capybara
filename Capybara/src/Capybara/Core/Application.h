@@ -46,11 +46,11 @@ namespace Capybara {
 		bool OnWindowResize(WindowResizeEvent& e);
 		bool OnWindowClose(WindowCloseEvent& e);
 	private:
-		std::unique_ptr<Window> m_Window;
+		Scope<Window> m_Window;
 		bool m_Running = true, m_Minimized = false;
 		LayerStack m_LayerStack;
-		ImGuiLayer* m_ImGuiLayer;
 		TimeStep m_TimeStep;
+		ImGuiLayer* m_ImGuiLayer;
 
 		float m_LastFrameTime = 0.0f;
 

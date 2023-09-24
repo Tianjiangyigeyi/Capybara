@@ -11,7 +11,7 @@ namespace Capybara {
         switch (RendererAPI::Current())
         {
         case RendererAPIType::None:    return nullptr;
-        case RendererAPIType::OpenGL:  return std::make_shared<OpenGLVertexBuffer>(data, size, usage);
+        case RendererAPIType::OpenGL:  return CreateRef<OpenGLVertexBuffer>(data, size, usage);
         }
         CPBR_CORE_ASSERT(false, "Unknown RendererAPI");
         return nullptr;
@@ -22,7 +22,7 @@ namespace Capybara {
         switch (RendererAPI::Current())
         {
         case RendererAPIType::None:    return nullptr;
-        case RendererAPIType::OpenGL:  return std::make_shared<OpenGLVertexBuffer>(size, usage);
+        case RendererAPIType::OpenGL:  return CreateRef<OpenGLVertexBuffer>(size, usage);
         }
         CPBR_CORE_ASSERT(false, "Unknown RendererAPI");
         return nullptr;
@@ -33,7 +33,7 @@ namespace Capybara {
         switch (RendererAPI::Current())
         {
         case RendererAPIType::None:    return nullptr;
-        case RendererAPIType::OpenGL:  return std::make_shared<OpenGLIndexBuffer>(data, size);
+        case RendererAPIType::OpenGL:  return CreateRef<OpenGLIndexBuffer>(data, size);
         }
         CPBR_CORE_ASSERT(false, "Unknown RendererAPI");
         return nullptr;
