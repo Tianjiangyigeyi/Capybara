@@ -14,7 +14,7 @@ namespace Capybara {
 	struct RendererData
 	{
 		Ref<RenderPass> m_ActiveRenderPass;
-		RenderCommandQueue m_CommandQueue;
+		Scope<RenderCommandQueue> m_CommandQueue;
 		Scope<ShaderLibrary> m_ShaderLibrary;
 		Ref<VertexArray> m_FullscreenQuadVertexArray;
 	};
@@ -25,6 +25,7 @@ namespace Capybara {
 	{
 		// s_Data.m_ShaderLibrary = std::make_unique<ShaderLibrary>();
 		s_Data.m_ShaderLibrary = CreateScope<ShaderLibrary>();
+		s_Data.m_CommandQueue = CreateScope<RenderCommandQueue>();
 		Renderer::Submit([](){ RendererAPI::Init(); });
 
 		Renderer::GetShaderLibrary()->Load("assets/shaders/CapybaraPBR_Static.glsl");
@@ -107,7 +108,7 @@ namespace Capybara {
 
 	void Renderer::WaitAndRender()
 	{
-		s_Data.m_CommandQueue.Execute();
+		s_Data.m_CommandQueue->Execute();
 	}
 
 	void Renderer::BeginRenderPass(const Ref<RenderPass>& renderPass)
@@ -197,7 +198,7 @@ namespace Capybara {
 		}
 	}
 
-	RenderCommandQueue& Renderer::GetRenderCommandQueue()
+	Scope<RenderCommandQueue>& Renderer::GetRenderCommandQueue()
 	{
 		return s_Data.m_CommandQueue;
 	}

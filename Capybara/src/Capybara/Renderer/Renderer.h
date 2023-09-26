@@ -49,7 +49,7 @@ namespace Capybara {
 				// static_assert(std::is_trivially_destructible_v<FuncT>, "FuncT must be trivially destructible");
 				pFunc->~FuncT();
 			};
-			auto storageBuffer = GetRenderCommandQueue().Allocate(renderCmd, sizeof(func));
+			auto storageBuffer = GetRenderCommandQueue()->Allocate(renderCmd, sizeof(func));
 			new (storageBuffer) FuncT(std::forward<FuncT>(func));
 		}
 
@@ -68,7 +68,7 @@ namespace Capybara {
 		static void SubmitFullscreenQuad(const Ref<MaterialInstance>& material);
 		static void SubmitMesh(const Ref<Mesh>& mesh, const glm::mat4& transform, const Ref<MaterialInstance>& overrideMaterial = nullptr);
 	private:
-		static RenderCommandQueue& GetRenderCommandQueue();
+		static Scope<RenderCommandQueue>& GetRenderCommandQueue();
 	};
 
 }

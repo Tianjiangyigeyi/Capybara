@@ -15,9 +15,11 @@ namespace Capybara {
 
 	OpenGLFramebuffer::~OpenGLFramebuffer()
 	{
-		Renderer::Submit([this]() {
-			glDeleteFramebuffers(1, &m_RendererID);
-		});
+		// TODO: 让RenderCommandQueue的析构函数最后才调用
+		// Renderer::Submit([this]() {
+		// 	glDeleteFramebuffers(1, &m_RendererID);
+		// });
+		glDeleteFramebuffers(1, &m_RendererID);
 	}
 
 	void OpenGLFramebuffer::Resize(uint32_t width, uint32_t height)

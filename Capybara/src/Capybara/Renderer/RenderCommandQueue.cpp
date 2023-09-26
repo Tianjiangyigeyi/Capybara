@@ -1,7 +1,5 @@
 ﻿#include "precomp.h"
 #include "RenderCommandQueue.h"
-#include "precomp.h"
-#include "RenderCommandQueue.h"
 
 #define CPBR_RENDER_TRACE(...) CPBR_CORE_TRACE(__VA_ARGS__)
 

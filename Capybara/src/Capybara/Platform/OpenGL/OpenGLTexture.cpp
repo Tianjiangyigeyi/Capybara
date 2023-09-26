@@ -114,9 +114,11 @@ namespace Capybara {
 
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
-		Renderer::Submit([this]() {
-			glDeleteTextures(1, &m_RendererID);
-		});
+		// Renderer::Submit([this]() {
+		// 	glDeleteTextures(1, &m_RendererID);
+		// });
+		glDeleteTextures(1, &m_RendererID);
+
 	}
 
 	void OpenGLTexture2D::Bind(uint32_t slot) const
@@ -276,10 +278,12 @@ namespace Capybara {
 
 	OpenGLTextureCube::~OpenGLTextureCube()
 	{
-		auto self = this;
-		Renderer::Submit([this]() {
-			glDeleteTextures(1, &m_RendererID);
-		});
+		// auto self = this;
+		// Renderer::Submit([this]() {
+		// 	glDeleteTextures(1, &m_RendererID);
+		// });
+		glDeleteTextures(1, &m_RendererID);
+
 	}
 
 	void OpenGLTextureCube::Bind(uint32_t slot) const
