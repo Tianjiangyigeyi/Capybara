@@ -234,7 +234,7 @@ namespace Capybara {
 						m_Textures[i] = texture;
 						CPBR_CORE_TRACE("  Texture Path = {0}", texturePath);
 						mi->Set("u_AlbedoTexture", m_Textures[i]);
-						mi->Set("u_AlbedoTexToggle", 1.0f);
+						// mi->Set("u_AlbedoTexToggle", 1.0f);
 					}
 					else
 					{
@@ -245,7 +245,7 @@ namespace Capybara {
 				}
 				else
 				{
-					mi->Set("u_AlbedoTexToggle", 0.0f);
+					// mi->Set("u_AlbedoTexToggle", 0.0f);
 					mi->Set("u_AlbedoColor", glm::vec3 { aiColor.r, aiColor.g, aiColor.b });
 				}
 
