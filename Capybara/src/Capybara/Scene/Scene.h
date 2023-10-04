@@ -22,7 +22,7 @@ namespace Capybara {
 		void Init();
 
 		void OnUpdate(TimeStep ts);
-
+		void OnEvent(Event& event);
 		void SetCamera(const Camera& camera);
 		Camera& GetCamera() { return m_Camera; }
 
@@ -32,7 +32,7 @@ namespace Capybara {
 		float& GetSkyboxLod() { return m_SkyboxLod; }
 
 		void AddEntity(Entity* entity);
-		Entity* CreateEntity();
+		Entity* CreateEntity(const std::string& name = "");
 	private:
 		std::string m_DebugName;
 		std::vector<Entity*> m_Entities;

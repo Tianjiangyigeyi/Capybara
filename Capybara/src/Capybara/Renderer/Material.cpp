@@ -45,6 +45,8 @@ namespace Capybara {
 
 	void Material::OnShaderReloaded()
 	{
+		// TODO: 为什么?
+		return;
 		AllocateStorage();
 		
 		for (auto mi : m_MaterialInstances)

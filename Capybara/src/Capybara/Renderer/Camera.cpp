@@ -9,6 +9,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
 
+
 #define M_PI 3.14159f
 
 namespace Capybara {
@@ -55,7 +56,7 @@ namespace Capybara {
 		return speed;
 	}
 
-	void Camera::Update(TimeStep ts)
+	void Camera::OnUpdate(TimeStep ts)
 	{
 		if (Input::IsKeyPressed(GLFW_KEY_LEFT_ALT))
 		{
@@ -80,6 +81,19 @@ namespace Capybara {
 		m_ViewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 1)) * glm::toMat4(glm::conjugate(orientation)) * glm::translate(glm::mat4(1.0f), -m_Position);
 		m_ViewMatrix = glm::translate(glm::mat4(1.0f), m_Position) * glm::toMat4(orientation);
 		m_ViewMatrix = glm::inverse(m_ViewMatrix);
+	}
+
+	void Camera::OnEvent(Event& event)
+	{
+		EventDispatcher dispatcher(event);
+		dispatcher.Dispatch<MouseScrolledEvent>(CPBR_BIND_EVENT_FN(Camera::OnMouseScroll));
+	}
+
+	bool Camera::OnMouseScroll(MouseScrolledEvent& event)
+	{
+		float delta = event.GetYOffset() * 0.1f;
+		MouseZoom(delta);
+		return false;
 	}
 
 	void Camera::MousePan(const glm::vec2& delta)

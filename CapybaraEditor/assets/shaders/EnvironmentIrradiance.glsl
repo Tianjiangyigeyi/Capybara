@@ -1,4 +1,4 @@
-#type compute
+// #type compute
 #version 450 core
 // Physically Based Rendering
 // Copyright (c) 2017-2018 Michał Siejak

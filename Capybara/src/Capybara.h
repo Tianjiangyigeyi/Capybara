@@ -6,6 +6,7 @@
 
 #include "Capybara/Core/Application.h"
 #include "Capybara/Core/Log.h"
+#include "Capybara/Core/Input.h"
 #include "Capybara/Core/TimeStep.h"
 
 #include "Capybara/Core/Events/Event.h"

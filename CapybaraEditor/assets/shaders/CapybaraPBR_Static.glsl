@@ -9,7 +9,7 @@
 // - Frostbite's SIGGRAPH 2014 paper (https://seblagarde.wordpress.com/2015/07/14/siggraph-2014-moving-frostbite-to-physically-based-rendering/)
 // - Michał Siejak's PBR project (https://github.com/Nadrin)
 // - My implementation from years ago in the Sparky engine (https://github.com/TheCherno/Sparky)
-#type vertex
+// #type vertex
 #version 430 core
 
 layout(location = 0) in vec3 a_Position;
@@ -34,7 +34,7 @@ out VertexOutput
 void main()
 {
 	vs_Output.WorldPosition = vec3(u_Transform * vec4(a_Position, 1.0));
-    vs_Output.Normal = a_Normal;
+    vs_Output.Normal = mat3(u_Transform) * a_Normal;
 	vs_Output.TexCoord = vec2(a_TexCoord.x, 1.0 - a_TexCoord.y);
 	vs_Output.WorldNormals = mat3(u_Transform) * mat3(a_Tangent, a_Binormal, a_Normal);
 	vs_Output.WorldTransform = mat3(u_Transform);
@@ -43,7 +43,7 @@ void main()
 	gl_Position = u_ViewProjectionMatrix * u_Transform * vec4(a_Position, 1.0);
 }
 
-#type fragment
+// #type fragment
 #version 430 core
 
 const float PI = 3.141592;
@@ -271,7 +271,7 @@ vec3 Lighting(vec3 F0)
 vec3 IBL(vec3 F0, vec3 Lr)
 {
 	vec3 irradiance = texture(u_EnvIrradianceTex, m_Params.Normal).rgb;
-	vec3 F = fresnelSchlickRoughness(F0, m_Params.NdotV, m_Params.Roughness);
+	vec3 F = fresnelSchlick(F0, m_Params.NdotV);
 	vec3 kd = (1.0 - F) * (1.0 - m_Params.Metalness);
 	vec3 diffuseIBL = m_Params.Albedo * irradiance;
 
@@ -316,4 +316,5 @@ void main()
 	vec3 iblContribution = IBL(F0, Lr);
 
 	color = vec4(lightContribution + iblContribution, 1.0);
+	color = vec4(iblContribution, 1.0);
 }

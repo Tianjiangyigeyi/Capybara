@@ -2,7 +2,7 @@
 #include "SceneRenderer.h"
 
 #include "Renderer.h"
-
+#include "Capybara/Renderer/Renderer2D.h"
 #include <glad/glad.h>
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -37,6 +37,8 @@ namespace Capybara {
 
 		// Grid
 		Ref<MaterialInstance> GridMaterial;
+
+		SceneRendererOptions Options;
 	};
 
 	static SceneRendererData s_Data;
@@ -47,6 +49,7 @@ namespace Capybara {
 		geoFramebufferSpec.Width = 1280;
 		geoFramebufferSpec.Height = 720;
 		geoFramebufferSpec.Format = FramebufferFormat::RGBA16F;
+		geoFramebufferSpec.Samples = 8;
 		geoFramebufferSpec.ClearColor = { 0.1f, 0.1f, 0.1f, 1.0f };
 
 		RenderPassSpecification geoRenderPassSpec;
@@ -63,7 +66,7 @@ namespace Capybara {
 		compRenderPassSpec.TargetFramebuffer = Capybara::Framebuffer::Create(compFramebufferSpec);
 		s_Data.CompositePass = RenderPass::Create(compRenderPassSpec);
 
-		s_Data.CompositeShader = Shader::Create("assets/shaders/hdr.glsl");
+		s_Data.CompositeShader = Shader::Create("assets/shaders/SceneComposite.glsl");
 		s_Data.BRDFLUT = Texture2D::Create("assets/textures/BRDF_LUT.tga");
 
 		// Grid
@@ -113,12 +116,16 @@ namespace Capybara {
 
 	static Ref<Shader> equirectangularConversionShader, envFilteringShader, envIrradianceShader;
 
+	// Shaders in this function are all compute shaders.
 	std::pair<Ref<TextureCube>, Ref<TextureCube>> SceneRenderer::CreateEnvironmentMap(const std::string& filepath)
 	{
+		// 2K
 		const uint32_t cubemapSize = 2048;
 		const uint32_t irradianceMapSize = 32;
-
+		
+		
 		Ref<TextureCube> envUnfiltered = TextureCube::Create(TextureFormat::Float16, cubemapSize, cubemapSize);
+		// 等距圆柱体投影
 		if (!equirectangularConversionShader)
 			equirectangularConversionShader = Shader::Create("assets/shaders/EquirectangularToCubeMap.glsl");
 		Ref<Texture2D> envEquirect = Texture2D::Create(filepath);
@@ -168,8 +175,9 @@ namespace Capybara {
 		envFiltered->Bind();
 		Renderer::Submit([irradianceMap]()
 		{
-				glBindImageTexture(0, irradianceMap->GetRendererID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
-				glDispatchCompute(irradianceMap->GetWidth() / 32, irradianceMap->GetHeight() / 32, 6);
+			glBindImageTexture(0, irradianceMap->GetRendererID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
+			glDispatchCompute(irradianceMap->GetWidth() / 32, irradianceMap->GetHeight() / 32, 6);
+			glGenerateTextureMipmap(irradianceMap->GetRendererID());
 		});
 
 		return { envFiltered, irradianceMap };
@@ -179,7 +187,7 @@ namespace Capybara {
 	{
 		Renderer::BeginRenderPass(s_Data.GeoPass);
 
-		auto viewProjection = s_Data.SceneData.SceneCamera.GetProjectionMatrix() * s_Data.SceneData.SceneCamera.GetViewMatrix();
+		auto viewProjection = s_Data.SceneData.SceneCamera.GetViewProjection();
 
 		// Skybox
 		auto skyboxShader = s_Data.SceneData.SkyboxMaterial->GetShader();
@@ -204,9 +212,22 @@ namespace Capybara {
 		}
 
 		// Grid
-		s_Data.GridMaterial->Set("u_ViewProjection", viewProjection);
-		Renderer::SubmitQuad(s_Data.GridMaterial, glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(16.0f)));
+		if (GetOptions().ShowGrid)
+		{
+			s_Data.GridMaterial->Set("u_ViewProjection", viewProjection);
+			Renderer::SubmitQuad(s_Data.GridMaterial, glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(16.0f)));
+		}
 
+		if (GetOptions().ShowBoundingBoxes)
+		{
+			Renderer2D::BeginScene(viewProjection);
+			for (auto & dc : s_Data.DrawList)
+			{
+				Renderer::DrawAABB(dc.Mesh);
+			}
+			Renderer2D::EndScene();
+		}
+		
 		Renderer::EndRenderPass();
 	}
 
@@ -215,6 +236,7 @@ namespace Capybara {
 		Renderer::BeginRenderPass(s_Data.CompositePass);
 		s_Data.CompositeShader->Bind();
 		s_Data.CompositeShader->SetFloat("u_Exposure", s_Data.SceneData.SceneCamera.GetExposure());
+		s_Data.CompositeShader->SetInt("u_TextureSamples", s_Data.GeoPass->GetSpecification().TargetFramebuffer->GetSpecification().Samples);
 		s_Data.GeoPass->GetSpecification().TargetFramebuffer->BindTexture();
 		Renderer::SubmitFullscreenQuad(nullptr);
 		Renderer::EndRenderPass();
@@ -231,6 +253,11 @@ namespace Capybara {
 		s_Data.SceneData = {};
 	}
 
+	Ref<RenderPass> SceneRenderer::GetFinalRenderPass()
+	{
+		return s_Data.CompositePass;
+	}
+	
 	Ref<Texture2D> SceneRenderer::GetFinalColorBuffer()
 	{
 		// return s_Data.CompositePass->GetSpecification().TargetFramebuffer;
@@ -243,4 +270,8 @@ namespace Capybara {
 		return s_Data.CompositePass->GetSpecification().TargetFramebuffer->GetColorAttachmentRendererID();
 	}
 
+	SceneRendererOptions& SceneRenderer::GetOptions()
+	{
+		return s_Data.Options;
+	}
 }
