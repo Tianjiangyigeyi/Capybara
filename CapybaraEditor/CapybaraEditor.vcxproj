@@ -155,7 +155,7 @@
     <Content Include="assets\shaders\EnvironmentMipFilter.glsl" />
     <Content Include="assets\shaders\EquirectangularToCubeMap.glsl" />
     <Content Include="assets\shaders\Grid.glsl" />
-    <Content Include="assets\shaders\SceneComposite.glsl" />
+    <Content Include="assets\shaders\hdr.glsl" />
     <Content Include="assets\shaders\Renderer2D.glsl" />
     <Content Include="assets\shaders\Renderer2D_Line.glsl" />
     <Content Include="assets\shaders\shader.glsl" />

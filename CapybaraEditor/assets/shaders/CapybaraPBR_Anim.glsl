@@ -9,7 +9,7 @@
 // - Frostbite's SIGGRAPH 2014 paper (https://seblagarde.wordpress.com/2015/07/14/siggraph-2014-moving-frostbite-to-physically-based-rendering/)
 // - Michał Siejak's PBR project (https://github.com/Nadrin)
 // - My implementation from years ago in the Sparky engine (https://github.com/TheCherno/Sparky)
-// #type vertex
+//#type vertex
 #version 430 core
 
 layout(location = 0) in vec3 a_Position;
@@ -54,7 +54,7 @@ void main()
 	gl_Position = u_ViewProjectionMatrix * u_Transform * localPosition;
 }
 
-// #type fragment
+//#type fragment
 #version 430 core
 
 const float PI = 3.141592;
@@ -322,7 +322,7 @@ void main()
 	// Fresnel reflectance, metals use albedo
 	vec3 F0 = mix(Fdielectric, m_Params.Albedo, m_Params.Metalness);
 
-	vec3 lightContribution = Lighting(F0);
+	vec3 lightContribution = vec3(0.0);//Lighting(F0);
 	vec3 iblContribution = IBL(F0, Lr);
 
 	color = vec4(lightContribution + iblContribution, 1.0);

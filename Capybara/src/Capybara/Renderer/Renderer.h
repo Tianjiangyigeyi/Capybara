@@ -21,11 +21,12 @@ namespace Capybara {
 		static void SetClearColor(float r, float g, float b, float a);
 
 		static void DrawIndexed(uint32_t count, PrimitiveType type, bool depthTest = true);
+		
+		// For OpenGL
+		static void SetLineThickness(float thickness);
 
 		static void ClearMagenta();
 
-		static void SetLineThickness(float thickness);
-		
 		static void Init();
 
 		static const Scope<ShaderLibrary>& GetShaderLibrary();
@@ -68,6 +69,7 @@ namespace Capybara {
 		static void SubmitQuad(const Ref<MaterialInstance>& material, const glm::mat4& transform = glm::mat4(1.0f));
 		static void SubmitFullscreenQuad(const Ref<MaterialInstance>& material);
 		static void SubmitMesh(const Ref<Mesh>& mesh, const glm::mat4& transform, const Ref<MaterialInstance>& overrideMaterial = nullptr);
+
 		static void DrawAABB(const Ref<Mesh>& mesh, const glm::vec4& color = glm::vec4(1.0f));
 	private:
 		static Scope<RenderCommandQueue>& GetRenderCommandQueue();
