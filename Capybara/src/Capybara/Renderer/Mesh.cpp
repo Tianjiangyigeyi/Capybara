@@ -240,7 +240,7 @@ namespace Capybara {
 						m_Textures[i] = texture;
 						CPBR_CORE_TRACE("  Texture Path = {0}", texturePath);
 						mi->Set("u_AlbedoTexture", m_Textures[i]);
-						// mi->Set("u_AlbedoTexToggle", 1.0f);
+						mi->Set("u_AlbedoTexToggle", 1.0f);
 					}
 					else
 					{
@@ -251,7 +251,7 @@ namespace Capybara {
 				}
 				else
 				{
-					// mi->Set("u_AlbedoTexToggle", 0.0f);
+					mi->Set("u_AlbedoTexToggle", 0.0f);
 					mi->Set("u_AlbedoColor", glm::vec3 { aiColor.r, aiColor.g, aiColor.b });
 					CPBR_CORE_TRACE("Mesh has no albedo map");
 				}
@@ -260,7 +260,7 @@ namespace Capybara {
 				mi->Set("u_NormalTexToggle", 0.0f);
 				if (aiMaterial->GetTexture(aiTextureType_NORMALS, 0, &aiTexPath) == AI_SUCCESS)
 				{
-					// TODO: Temp - this shoule be handled by Capybara's filesystem
+					// TODO: Temp - this should be handled by Capybara's filesystem
 					std::filesystem::path path = filename;
 					auto parentPath = path.parent_path();
 					parentPath /= std::string(aiTexPath.data);
@@ -275,7 +275,7 @@ namespace Capybara {
 					}
 					else
 					{
-						CPBR_CORE_TRACE("Could not load texture: {0}", texturePath);
+						CPBR_CORE_ERROR("Could not load texture: {0}", texturePath);
 					}
 				}
 				else
@@ -300,7 +300,7 @@ namespace Capybara {
 					}
 					else
 					{
-						CPBR_CORE_TRACE("Could not load texture: {0}", texturePath);
+						CPBR_CORE_ERROR("Could not load texture: {0}", texturePath);
 					}
 				}
 				else
