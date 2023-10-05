@@ -5,6 +5,8 @@
 
 namespace Capybara {
 
+	static const std::string DefaultEntityName = "Entity";
+	
 	Scene::Scene(const std::string& debugName)
 		: m_DebugName(debugName)
 	{
@@ -26,7 +28,7 @@ namespace Capybara {
 
 	void Scene::OnUpdate(TimeStep ts)
 	{
-		m_Camera.Update(ts);
+		m_Camera.OnUpdate(ts); // TODO: remove this
 
 		m_SkyboxMaterial->Set("u_TextureLod", m_SkyboxLod);
 
@@ -50,6 +52,11 @@ namespace Capybara {
 		SceneRenderer::EndScene();
 	}
 
+	void Scene::OnEvent(Event& event)
+	{
+		m_Camera.OnEvent(event);
+	}
+	
 	void Scene::SetCamera(const Camera& camera)
 	{
 		m_Camera = camera;
@@ -72,9 +79,10 @@ namespace Capybara {
 		m_Entities.push_back(entity);
 	}
 
-	Entity* Scene::CreateEntity()
+	Entity* Scene::CreateEntity(const std::string& name)
 	{
-		Entity* entity = new Entity();
+		const std::string& entityname = name.empty() ? DefaultEntityName : name;
+		Entity* entity = new Entity(entityname);
 		AddEntity(entity);
 		return entity;
 	}
