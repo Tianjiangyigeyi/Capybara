@@ -33,7 +33,7 @@ namespace Capybara {
 		virtual void OnUpdate(TimeStep ts) override;
 
 		virtual void OnImGuiRender() override;
-		virtual void OnEvent(Event& event) override;
+		virtual void OnEvent(Event& e) override;
 		bool OnKeyPressedEvent(KeyPressedEvent& e);
 
 		// ImGui UI helpers
@@ -45,6 +45,7 @@ namespace Capybara {
 		void Property(const std::string& name, glm::vec3& value, float min = -1.0f, float max = 1.0f, PropertyFlag flags = PropertyFlag::None);
 		void Property(const std::string& name, glm::vec4& value, PropertyFlag flags);
 		void Property(const std::string& name, glm::vec4& value, float min = -1.0f, float max = 1.0f, PropertyFlag flags = PropertyFlag::None);
+
 		void ShowBoundingBoxes(bool show, bool onTop = false);
 	private:
 		Scope<SceneHierarchyPanel> m_SceneHierarchyPanel;
