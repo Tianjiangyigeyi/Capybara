@@ -102,7 +102,7 @@ namespace Capybara {
 	void Renderer::DrawIndexed(uint32_t count, bool depthTest)
 	{
 		Renderer::Submit([=]() {
-			RendererAPI::DrawIndexed(count, depthTest);
+			RendererAPI::DrawIndexed(count, PrimitiveType::Triangles, depthTest);
 		});
 	}
 
