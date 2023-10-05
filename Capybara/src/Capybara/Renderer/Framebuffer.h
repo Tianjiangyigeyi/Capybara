@@ -19,7 +19,7 @@ namespace Capybara {
         uint32_t Height = 720;
         glm::vec4 ClearColor;
         FramebufferFormat Format;
-		
+        uint32_t Samples = 1; // muiltsampling
         // SwapChainTarget = screen buffer (i.e. no framebuffer)
         bool SwapChainTarget = false;
     };
