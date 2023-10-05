@@ -1,4 +1,4 @@
-#type vertex
+//#type vertex
 #version 430
 
 layout(location = 0) in vec3 a_Position;
@@ -13,7 +13,7 @@ void main()
 	gl_Position = position;
 }
 
-#type fragment
+//#type fragment
 #version 430
 
 in vec2 v_TexCoord;

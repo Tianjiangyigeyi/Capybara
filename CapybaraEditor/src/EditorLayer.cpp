@@ -86,7 +86,7 @@ namespace Capybara {
 
 			m_MeshEntity = m_Scene->CreateEntity();
 
-			auto mesh = CreateRef<Mesh>("assets/models/m1911/m1911.fbx");
+			auto mesh = CreateRef<Mesh>("assets/meshes/TestScene.fbx");
 			//auto mesh = CreateRef<Mesh>("assets/meshes/cerberus/CerberusMaterials.fbx");
 			// auto mesh = CreateRef<Mesh>("assets/models/m1911/M1911Materials.fbx");
 			m_MeshEntity->SetMesh(mesh);

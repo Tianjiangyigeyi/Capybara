@@ -1,4 +1,4 @@
-#type compute
+//#type compute
 #version 450 core
 
 // Converts equirectangular (lat-long) projection texture into a cubemap
