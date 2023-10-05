@@ -26,6 +26,8 @@ namespace Capybara {
 		virtual void SetPSMaterialUniformBuffer(Buffer buffer) override;
 
 		virtual void SetFloat(const std::string& name, float value) override;
+		virtual void SetInt(const std::string& name,  int value) override;
+		virtual void SetIntArray(const std::string& name,  int *values, uint32_t size) override;
 		virtual void SetMat4(const std::string& name, const glm::mat4& value) override;
 		virtual void SetMat4FromRenderThread(const std::string& name, const glm::mat4& value, bool bind = true) override;
 
@@ -53,7 +55,7 @@ namespace Capybara {
 		void ResolveAndSetUniformField(const OpenGLShaderUniformDeclaration& field, byte* data, int32_t offset);
 
 		void UploadUniformInt(uint32_t location, int32_t value);
-		void UploadUniformIntArray(uint32_t location, int32_t* values, int32_t count);
+		void UploadUniformIntArray(uint32_t location, int32_t* values, uint32_t count);
 		void UploadUniformFloat(uint32_t location, float value);
 		void UploadUniformFloat2(uint32_t location, const glm::vec2& value);
 		void UploadUniformFloat3(uint32_t location, const glm::vec3& value);
