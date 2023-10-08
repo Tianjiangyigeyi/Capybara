@@ -28,7 +28,6 @@ namespace Capybara {
 
 	void Scene::OnUpdate(TimeStep ts)
 	{
-		m_Camera.OnUpdate(ts); // TODO: remove this
 
 		m_SkyboxMaterial->Set("u_TextureLod", m_SkyboxLod);
 

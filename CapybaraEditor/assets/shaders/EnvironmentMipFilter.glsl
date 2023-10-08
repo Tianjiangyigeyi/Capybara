@@ -1,10 +1,30 @@
 //#type compute
 #version 450 core
-// Physically Based Rendering
-// Copyright (c) 2017-2018 Michał Siejak
-
-// Pre-filters environment cube map using GGX NDF importance sampling.
-// Part of specular IBL split-sum approximation.
+// 这个着色器是用于通过GGX NDF重要性采样来预过滤环境立方体贴图的。它是用于镜面IBL（Image-Based Lighting）的分裂和求和近似的一部分：
+// 
+// 1. 定义了一些常量和变量，如PI、TwoPI、Epsilon、NumSamples和InvNumSamples。
+// 2. 声明了输入和输出的纹理单元，并设置了绑定点。
+// 3. 实现了Van der Corput反序列化和Hammersley点集采样函数。
+// 4. 实现了固定粗糙度值的GGX法线分布函数的重要性采样函数。
+// 5. 实现了获取立方体贴图纹理坐标的函数。
+// 6. 实现了计算从切线/着色空间到世界空间的正交基的函数。
+// 7. 实现了从切线/着色空间到世界空间的转换函数。
+// 8. 在主函数中，首先检查当前线程是否在输出纹理范围内，以避免写入超出范围的数据。
+// 9. 计算单个立方体贴图纹素在零级mipmap上的固定立体角。
+// 10. 计算切线/着色空间中的法线方向N，并将其设置为观察方向Lo。
+// 11. 计算切线/着色空间的正交基S和T。
+// 12. 初始化颜色和权重变量。
+// 13. 使用GGX NDF重要性采样方法对环境贴图进行卷积。
+// 14. 根据余弦项进行加权，因为它通常可以提高质量。
+// 15. 在每个样本上计算反射方向Li，通过将观察方向Lo绕半向量Lh进行反射。
+// 16. 计算Li与法线方向N的余弦值。
+// 17. 如果余弦值大于0，则使用多级贴图过滤重要性采样来提高收敛性。
+// 18. 计算样本的固定立体角和概率密度函数。
+// 19. 计算采样的mip级别。
+// 20. 根据权重和余弦值对颜色进行累加。
+// 21. 最后，将归一化的颜色存储到输出纹理中。
+// 
+// 总体上，这个着色器实现了对环境立方体贴图进行GGX NDF重要性采样的预过滤操作，以用于镜面IBL的分裂和求和近似。
 
 const float PI = 3.141592;
 const float TwoPI = 2 * PI;

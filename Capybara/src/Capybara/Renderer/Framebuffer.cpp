@@ -12,7 +12,7 @@ namespace Capybara {
         switch (RendererAPI::Current())
         {
         case RendererAPIType::None:		return nullptr;
-        case RendererAPIType::OpenGL:	result = std::make_shared<OpenGLFramebuffer>(spec);
+        case RendererAPIType::OpenGL:	result = CreateRef<OpenGLFramebuffer>(spec);
         }
         FramebufferPool::GetGlobal()->Add(result);
         return result;

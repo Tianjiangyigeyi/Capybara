@@ -1,10 +1,19 @@
 //#type compute
+// 这段代码是用于计算基于图像的照明的漫反射辐照度立方体贴图的卷积。它使用了Hammersley序列的准蒙特卡洛采样方法。该着色器程序使用计算着色器（compute shader）实现，主要包括以下步骤：
+// 
+// 1. 定义了一些常量和变量，如PI、TwoPI、Epsilon、NumSamples和InvNumSamples。
+// 2. 绑定了输入的立方体贴图到输入纹理单元0，并将输出的辐照度立方体贴图绑定到输出纹理单元0。
+// 3. 实现了Van der Corput反序列化和Hammersley点集采样函数。
+// 4. 实现了在半球上均匀采样点的函数。
+// 5. 实现了获取立方体贴图纹理坐标的函数。
+// 6. 实现了计算从切线/着色空间到世界空间的正交基的函数。
+// 7. 实现了从切线/着色空间到世界空间的转换函数。
+// 8. 在主函数中，首先获取立方体贴图纹理坐标，并计算出切线/着色空间的正交基。
+// 9. 使用准蒙特卡洛积分方法，对半球上的辐照度进行采样。
+// 10. 最后，将计算得到的辐照度值存储到输出的辐照度立方体贴图中。
+// 
+// 总体上，该代码实现了对环境立方体贴图进行漫反射辐照度的计算，以用于图像的基于物理的渲染。
 #version 450 core
-// Physically Based Rendering
-// Copyright (c) 2017-2018 Michał Siejak
-
-// Computes diffuse irradiance cubemap convolution for image-based lighting.
-// Uses quasi Monte Carlo sampling with Hammersley sequence.
 
 const float PI = 3.141592;
 const float TwoPI = 2 * PI;
