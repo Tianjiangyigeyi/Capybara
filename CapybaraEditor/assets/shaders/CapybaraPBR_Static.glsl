@@ -243,6 +243,7 @@ vec3 Lighting(vec3 F0)
         float cosLh = max(0.0, dot(m_Params.Normal, Lh));
         
         vec3 F = fresnelSchlick(F0, max(0.0, dot(Lh, m_Params.View)));
+//        vec3 F = fresnelSchlickRoughness(F0, max(0.0, dot(Lh, m_Params.View)), m_Params.Roughness);
         float D = ndfGGX(cosLh, m_Params.Roughness);
         float G = gaSchlickGGX(cosLi, m_Params.NdotV, m_Params.Roughness);
         
@@ -301,8 +302,8 @@ void main()
     // Fresnel reflectance, metals use albedo
     vec3 F0 = mix(Fdielectric, m_Params.Albedo, m_Params.Metalness);
     
-    vec3 lightContribution = Lighting(F0);
+//    vec3 lightContribution = Lighting(F0);
     vec3 iblContribution = IBL(F0, Lr);
     
-    color = vec4(lightContribution + iblContribution, 1.0);
+    color = vec4(iblContribution, 1.0);
 }

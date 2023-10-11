@@ -123,7 +123,7 @@ namespace Capybara {
 		const uint32_t cubemapSize = 2048;
 		const uint32_t irradianceMapSize = 32;
 		
-		// 将hdr文件加载为等距圆柱体投影
+		// 加载hdr, hdr本身就是一个等距圆柱体投影(2D)
 		Ref<Texture2D> envEquirect = Texture2D::Create(filepath);
 		CPBR_CORE_ASSERT(envEquirect->GetFormat() == TextureFormat::Float16, "Texture is not HDR!");
 		
@@ -137,9 +137,9 @@ namespace Capybara {
 		{
 			/*
 			 * 计算着色器中的环境贴图
-			 * 首先，glBindImageTexture()函数将一个纹理绑定到图像单元0上，该纹理是
-			 * envUnfiltered对象的渲染器ID。然后，glDispatchCompute()函数根据cubemapSize的大小，将计算分派到多个计算单元中
-			 * 进行计算。最后，glGenerateTextureMipmap()函数生成envUnfiltered纹理的mipmap。
+			 * 首先，glBindImageTexture()函数将envUnfiltered绑定到图像单元0上，
+			 * 然后，glDispatchCompute()函数根据cubemapSize的大小，将计算分派到多个计算单元中进行计算。
+			 * 最后，glGenerateTextureMipmap()函数生成envUnfiltered纹理的mipmap。
 			 */
 			glBindImageTexture(0, envUnfiltered->GetRendererID(), 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA16F);
 			glDispatchCompute(cubemapSize / 32, cubemapSize / 32, 6);

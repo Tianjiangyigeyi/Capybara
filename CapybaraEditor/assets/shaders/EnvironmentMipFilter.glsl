@@ -102,7 +102,15 @@ vec3 GetCubeMapTexCoord()
     return normalize(ret);
 }
 
-// Compute orthonormal basis for converting from tanget/shading space to world space.
+/* 这段代码是用来计算从切线/着色空间到世界空间的正交基向量。它使用了给定的法线向量N来计算切线向量S和副切线向量T。具体的计算步骤如下： 
+ * 
+ * 1. 初始化副切线向量T为与N垂直的向量(0.0, 1.0, 0.0)的叉乘结果。 
+ * 2. 使用混合函数(mix)来选择非退化的副切线向量T。如果T与自身的点积大于一个很小的阈值(Epsilon)，则选择与N叉乘的结果作为新的T值。 
+ * 3. 对副切线向量T进行归一化。 
+ * 4. 计算切线向量S，它是N和T的叉乘结果，并对其进行归一化。 
+ *  
+ * 这样就可以得到一个从切线/着色空间到世界空间的正交基向量(S, T, N)。
+ */
 void computeBasisVectors(const vec3 N, out vec3 S, out vec3 T)
 {
 	// Branchless select non-degenerate T.
@@ -122,7 +130,7 @@ vec3 tangentToWorld(const vec3 v, const vec3 N, const vec3 S, const vec3 T)
 layout(local_size_x=32, local_size_y=32, local_size_z=1) in;
 void main(void)
 {
-	// Make sure we won't write past output when computing higher mipmap levels.
+	// 确保写入的是正确的mipmap
 	ivec2 outputSize = imageSize(outputTexture[PARAM_LEVEL]);
 	if(gl_GlobalInvocationID.x >= outputSize.x || gl_GlobalInvocationID.y >= outputSize.y) {
 		return;
@@ -133,10 +141,11 @@ void main(void)
 	vec2 inputSize = vec2(textureSize(inputTexture, 0));
 	float wt = 4.0 * PI / (6 * inputSize.x * inputSize.y);
 	
-	// Approximation: Assume zero viewing angle (isotropic reflections).
+	// 采样的方向向量归一化到球面
 	vec3 N = GetCubeMapTexCoord();
 	vec3 Lo = N;
 	
+	// 切线空间，N法线，S切线，T副切线
 	vec3 S, T;
 	computeBasisVectors(N, S, T);
 
@@ -146,6 +155,7 @@ void main(void)
 	// Convolve environment map using GGX NDF importance sampling.
 	// Weight by cosine term since Epic claims it generally improves quality.
 	for(uint i = 0; i < NumSamples; i++) {
+		// Hammersley采样，就是利用计算机使用二进制表示的特性，来构造均匀分布的2D随机采样点。
 		vec2 u = sampleHammersley(i);
 		vec3 Lh = tangentToWorld(sampleGGX(u.x, u.y, PARAM_ROUGHNESS), N, S, T);
 
