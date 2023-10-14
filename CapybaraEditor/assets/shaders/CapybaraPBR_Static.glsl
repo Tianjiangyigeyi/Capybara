@@ -260,11 +260,12 @@ vec3 Lighting(vec3 F0)
 
 vec3 IBL(vec3 F0, vec3 Lr)
 {
+    // diffuse
     vec3 irradiance = texture(u_EnvIrradianceTex, m_Params.Normal).rgb;
     vec3 F = fresnelSchlick(F0, m_Params.NdotV);
     vec3 kd = (1.0 - F) * (1.0 - m_Params.Metalness);
     vec3 diffuseIBL = m_Params.Albedo * irradiance;
-    
+    // specular
     int u_EnvRadianceTexLevels = textureQueryLevels(u_EnvRadianceTex);
     float NoV = clamp(m_Params.NdotV, 0.0, 1.0);
     vec3 R = 2.0 * dot(m_Params.View, m_Params.Normal) * m_Params.Normal - m_Params.View;

@@ -251,7 +251,7 @@ namespace Capybara {
 				}
 				else
 				{
-					mi->Set("u_AlbedoTexToggle", 0.0f);
+					// mi->Set("u_AlbedoTexToggle", 0.0f);
 					mi->Set("u_AlbedoColor", glm::vec3 { aiColor.r, aiColor.g, aiColor.b });
 					CPBR_CORE_TRACE("Mesh has no albedo map");
 				}
