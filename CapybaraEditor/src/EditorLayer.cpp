@@ -76,7 +76,7 @@ namespace Capybara {
 
 		using namespace glm;
 
-		auto environment = Environment::Load("assets/env/birchwood_4k.hdr");
+		auto environment = Environment::Load("assets/env/resting_place_4k.hdr");
 
 		// Model Scene
 		{
@@ -87,15 +87,15 @@ namespace Capybara {
 
 			m_MeshEntity = m_Scene->CreateEntity("Test Entity");
 
-			auto mesh = CreateRef<Mesh>("assets/meshes/TestScene.fbx");
+			auto mesh = CreateRef<Mesh>("assets/models/m1911/m1911.fbx");
 			m_MeshEntity->SetMesh(mesh);
 
 			m_MeshMaterial = mesh->GetMaterial();
 
-			auto secondEntity = m_Scene->CreateEntity("Gun Entity");
-			secondEntity->Transform() = glm::translate(glm::mat4(1.0f), { 5, 5, 5 }) * glm::scale(glm::mat4(1.0f), {10, 10, 10});
-			mesh = CreateRef<Mesh>("assets/models/m1911/m1911.fbx");
-			secondEntity->SetMesh(mesh);
+			// auto secondEntity = m_Scene->CreateEntity("Gun Entity");
+			// secondEntity->Transform() = glm::translate(glm::mat4(1.0f), { 5, 5, 5 }) * glm::scale(glm::mat4(1.0f), {10, 10, 10});
+			// mesh = CreateRef<Mesh>("assets/models/m1911/m1911.fbx");
+			// secondEntity->SetMesh(mesh);
 		}
 
 		// Sphere Scene
