@@ -180,10 +180,10 @@
     <ClInclude Include="src\Capybara\Renderer\Material.h" />
     <ClInclude Include="src\Capybara\Renderer\Mesh.h" />
     <ClInclude Include="src\Capybara\Renderer\RenderCommandQueue.h" />
+    <ClInclude Include="src\Capybara\Renderer\RenderPass.h" />
     <ClInclude Include="src\Capybara\Renderer\Renderer.h" />
     <ClInclude Include="src\Capybara\Renderer\Renderer2D.h" />
     <ClInclude Include="src\Capybara\Renderer\RendererAPI.h" />
-    <ClInclude Include="src\Capybara\Renderer\RenderPass.h" />
     <ClInclude Include="src\Capybara\Renderer\SceneRenderer.h" />
     <ClInclude Include="src\Capybara\Renderer\Shader.h" />
     <ClInclude Include="src\Capybara\Renderer\ShaderUniform.h" />
@@ -206,8 +206,8 @@
     <ClCompile Include="src\Capybara\ImGui\ImGuizmo.cpp" />
     <ClCompile Include="src\Capybara\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Capybara\Platform\OpenGL\OpenGLFramebuffer.cpp" />
-    <ClCompile Include="src\Capybara\Platform\OpenGL\OpenGLRendererAPI.cpp" />
     <ClCompile Include="src\Capybara\Platform\OpenGL\OpenGLRenderPass.cpp" />
+    <ClCompile Include="src\Capybara\Platform\OpenGL\OpenGLRendererAPI.cpp" />
     <ClCompile Include="src\Capybara\Platform\OpenGL\OpenGLShader.cpp" />
     <ClCompile Include="src\Capybara\Platform\OpenGL\OpenGLShaderUniform.cpp" />
     <ClCompile Include="src\Capybara\Platform\OpenGL\OpenGLTexture.cpp" />
@@ -220,9 +220,9 @@
     <ClCompile Include="src\Capybara\Renderer\Material.cpp" />
     <ClCompile Include="src\Capybara\Renderer\Mesh.cpp" />
     <ClCompile Include="src\Capybara\Renderer\RenderCommandQueue.cpp" />
+    <ClCompile Include="src\Capybara\Renderer\RenderPass.cpp" />
     <ClCompile Include="src\Capybara\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Capybara\Renderer\Renderer2D.cpp" />
-    <ClCompile Include="src\Capybara\Renderer\RenderPass.cpp" />
     <ClCompile Include="src\Capybara\Renderer\SceneRenderer.cpp" />
     <ClCompile Include="src\Capybara\Renderer\Shader.cpp" />
     <ClCompile Include="src\Capybara\Renderer\Texture.cpp" />
