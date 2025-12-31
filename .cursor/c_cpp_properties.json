@@ -1,0 +1,37 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/Capybara/src",
+                "${workspaceFolder}/Capybara/vendor",
+                "${workspaceFolder}/Capybara/vendor/GLFW/include",
+                "${workspaceFolder}/Capybara/vendor/GLAD/include",
+                "${workspaceFolder}/Capybara/vendor/imgui",
+                "${workspaceFolder}/Capybara/vendor/glm",
+                "${workspaceFolder}/Capybara/vendor/assimp/include",
+                "${workspaceFolder}/Capybara/vendor/assimp/include/assimp",
+                "${workspaceFolder}/Capybara/vendor/stb/include",
+                "${workspaceFolder}/CapybaraEditor/src"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "WIN32",
+                "_WINDOWS",
+                "CPBR_PLATFORM_WINDOWS",
+                "CPBR_DEBUG",
+                "_CRT_SECURE_NO_WARNINGS"
+            ],
+            "windowsSdkVersion": "10.0.26100.0",
+            "compilerPath": "",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-msvc-x64",
+            "compileCommands": "${workspaceFolder}/build/compile_commands.json"
+        }
+    ],
+    "version": 4
+}

@@ -8,8 +8,18 @@ REM Usage: run.bat [Debug|Release|Dist]
 set "CONFIG=%~1"
 if "!CONFIG!"=="" set "CONFIG=Debug"
 
-REM Build output directory
-set "OUTPUT_DIR=bin\!CONFIG!-windows-x86_64\CapybaraEditor"
+REM 动态检测系统架构和名称（与 CMake 保持一致）
+REM 检测处理器架构
+set "ARCH=AMD64"
+if /i "%PROCESSOR_ARCHITECTURE%"=="x86" set "ARCH=x86"
+if /i "%PROCESSOR_ARCHITECTURE%"=="ARM64" set "ARCH=ARM64"
+if /i "%PROCESSOR_ARCHITECTURE%"=="ARM" set "ARCH=ARM"
+
+REM 检测系统名称（Windows 批处理脚本，默认为 Windows）
+set "SYSTEM_NAME=Windows"
+
+REM Build output directory (CMake 输出目录) - 动态构建
+set "OUTPUT_DIR=bin\!CONFIG!-!SYSTEM_NAME!-!ARCH!\CapybaraEditor"
 set "EXE_PATH=!OUTPUT_DIR!\CapybaraEditor.exe"
 
 REM Check if executable exists
@@ -62,4 +72,3 @@ if !ERRORLEVEL! NEQ 0 (
 )
 
 endlocal
-

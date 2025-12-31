@@ -1,9 +1,52 @@
+# Build outputs
 bin/
+bin-int/
 obj/
-/packages/
+build/
+build-ninja/
+
+# Visual Studio / Premake (legacy)
+*.user
+*.vcxproj
+*.vcxproj.filters
+*.sln
+.vs/
+.cache/
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+*.cmake
+!CMakeLists.txt
+cmake_install.cmake
+install_manifest.txt
+# compile_commands.json - 取消注释下面这行以忽略，或保留以支持 clangd
+# compile_commands.json
+CTestTestfile.cmake
+_deps/
+
+# IDE
+.idea/
 riderModule.iml
 /_ReSharper.Caches/
-.vs/
-.idea/
-bin-int/
-*.user
+.vscode/*
+!.vscode/c_cpp_properties.json
+.cursor/*
+!.cursor/c_cpp_properties.json
+*.swp
+*.swo
+*~
+
+# Packages
+/packages/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.bak
+*.log
